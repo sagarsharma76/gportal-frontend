@@ -1,20 +1,30 @@
 import { authHeader } from '../helpers/auth-header';
+import * as http from '../helpers/http-call';
+
+let IP = "localhost"
+let port = ":3500"
 
 export function login(username, password) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    };
+    let apiEndpoint = '/employees'
+    let headers = {
+        'Access-Control-Allow-Origin': '*',
+        // 'access-control-allow-credentials': true,
+        'content-type': 'application/json'
+    }
+    return http.getMethod(apiEndpoint, headers
+    ).then(response => {
+        console.log(response);
+        if(response.success==true){
+            const token = (response && response.data && response.data.token) || "";
+            localStorage.setItem('token', token);
+            return response
+        }else{
+            const error = (response && response.errors && response.errors.errorMessage) || 'Login Failed';
+            return Promise.reject(error);
+        }
+        
+    })
 
-    // return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
-    //     .then(handleResponse)
-    //     .then(user => {
-    //         // store user details and jwt token in local storage to keep user logged in between page refreshes
-    //         localStorage.setItem('user', JSON.stringify(user));
-
-    //         return user;
-    //     });
 }
 
 export function logout() {

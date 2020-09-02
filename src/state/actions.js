@@ -12,9 +12,12 @@ export function login(username, password) {
 
         loginService.login(username, password)
             .then(
-                user => {
-                    dispatch(success(user));
-                    history.push('/');
+                response => {
+                    console.log(response.success)
+                    if (response.success) {
+                        dispatch(success(response));
+                        history.push('/');
+                    }
                 },
                 error => {
                     dispatch(failure(error));
