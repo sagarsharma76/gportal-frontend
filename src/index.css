@@ -129,15 +129,17 @@ body, html, .App, #root, .auth-wrapper {
   color:#ffffe1;
 }
 
+.list-group-item{
+  padding: 1% !important;
+}
+
 .heading{
   background-color: #343a40 !important;
   color:#ffffe1 !important;
   padding: 1% !important;
 }
 
-.item{
-  padding: 1% !important;
-}
+
 .navbar{
   padding: 5px 10px !important;
 }

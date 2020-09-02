@@ -17,11 +17,20 @@ class AccountHolderMaster extends React.Component {
         this.state = {
             username: '',
             password: '',
-            submitted: false
+            submitted: false,
+            list:['abc','def','ghi','aed'],
+            searchTerm:'',
+            searchResult:[]
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSearchChange = this.handleSearchChange.bind(this);
+    }
+
+    componentDidMount(){
+        const list = this.state.list;
+        this.setState({searchResult:list})
     }
 
     handleChange(e) {
@@ -40,9 +49,22 @@ class AccountHolderMaster extends React.Component {
         }
     }
 
+    handleSearchChange(e){
+        const { name, value } = e.target;
+        this.setState({ [name]: value});
+        let result = this.state.list;
+        result = result.filter(item=>item.toLowerCase().includes(value.toLowerCase()))
+        this.setState({searchResult:result})
+    }
+
     render() {
         const { loggingIn } = this.props;
-        const { username, password, submitted } = this.state;
+        const { username, password, submitted,searchTerm } = this.state;
+        const items = []
+        const elements = this.state.searchResult;
+        for (const [index, value] of elements.entries()) {
+            items.push(<li className="item list-group-item" key={index}>{value}</li>)
+          }
         return (
             <div>
                 <NavigationBar />
@@ -53,18 +75,19 @@ class AccountHolderMaster extends React.Component {
                                 <div>
                                     <Navbar className="inner-nav" bg="dark" variant="dark">
                                         <div className="col-12">
-                                            <FormControl type="text" placeholder="Search" />
+                                            <input className="form-control" type="text" name="searchTerm" value={searchTerm} placeholder="Search" onChange={this.handleSearchChange}/>
                                         </div>
                                     </Navbar>
                                 </div>
                                 <div className="inner-search-box">
-                                    <ul class="list-group">
-                                        <li class="heading list-group-item disabled">Group Name</li>
-                                        <li class="item list-group-item" onClick={() => alert("hello")}>Cras justo odio</li>
-                                        <li class="item list-group-item">Dapibus ac facilisis in</li>
-                                        <li class="item list-group-item">Morbi leo risus</li>
-                                        <li class="item list-group-item">Porta ac consectetur ac</li>
-                                        <li class="item list-group-item">Vestibulum at eros</li>
+                                    <ul className="list-group">
+                                        <li className="heading list-group-item disabled">Group Name</li>
+                                        {/* <li className="item list-group-item" onClick={() => alert("hello")}>Cras justo odio</li>
+                                        <li className="item list-group-item">Dapibus ac facilisis in</li>
+                                        <li className="item list-group-item">Morbi leo risus</li>
+                                        <li className="item list-group-item">Porta ac consectetur ac</li>
+                                        <li className="item list-group-item">Vestibulum at eros</li> */}
+                                        {items}
                                     </ul>
                                 </div>
                             </div>
