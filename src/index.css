@@ -125,9 +125,15 @@ body, html, .App, #root, .auth-wrapper {
 }
 
 .list-group-item:hover{
+  background-color:rgb(227, 245, 252);
+  color:black;
+}
+
+.list-group-item:active{
   background-color:#007bff;
   color:#ffffe1;
 }
+
 
 .list-group-item{
   padding: 1% !important;
@@ -145,5 +151,10 @@ body, html, .App, #root, .auth-wrapper {
 }
 
 .lbl-form{
-  margin-bottom: 0rem;
+  margin-top: 1rem;
+  margin-bottom:0rem;
+}
+
+.help-block{
+  color:red;
 }

@@ -24,10 +24,10 @@ class App extends React.Component {
                 <Router history={history}>
                     <div>
                         <PrivateRoute exact path="/" component={HomePage} />
-                        <PrivateRoute exact path="/account-name" component={AccountNameMaster} />
-                        <PrivateRoute exact path="/account-holder" component={AccountHolderMaster} />
+                        <PrivateRoute exact path="/account-master" component={AccountNameMaster} />
+                        <PrivateRoute exact path="/holder-master" component={AccountHolderMaster} />
                         <PrivateRoute exact path="/company" component={CompanyMaster} />
-                        <PrivateRoute exact path="/holder-group" component={HolderGroupMaster} />
+                        <PrivateRoute exact path="/holder-group-master" component={HolderGroupMaster} />
                         <Route path="/login" component={LoginPage} />
                     </div>
                 </Router>

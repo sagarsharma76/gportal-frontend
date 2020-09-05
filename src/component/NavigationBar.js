@@ -7,13 +7,14 @@ import { history } from '../helpers/history';
 import * as actions from '../state/actions';
 
 class NavigationBar extends React.Component {
-    componentDidMount() {
-
-    }
+   
 
     constructor(props) {
         super(props)
         this.state = { isOpen: false }
+    }
+
+    componentDidMount() {
     }
 
     handleOpen = () => {
@@ -38,10 +39,10 @@ class NavigationBar extends React.Component {
                                 onMouseEnter={(e) => document.getElementById("master-dropdown").click()}
                                 onMouseLeave={(e) => document.getElementById("master-dropdown").click()}
                             >
-                                <NavDropdown.Item href="" onClick={()=>history.push('/account-name')}>Account Name Master</NavDropdown.Item>
-                                <NavDropdown.Item href="" onClick={()=>history.push('/account-holder')}>Account Holder Master</NavDropdown.Item>
+                                <NavDropdown.Item href="" onClick={()=>history.push('/account-master')}>Account Name Master</NavDropdown.Item>
+                                <NavDropdown.Item href="" onClick={()=>history.push('/holder-master')}>Account Holder Master</NavDropdown.Item>
                                 <NavDropdown.Item href="" onClick={()=>history.push('/company')}>Company Master</NavDropdown.Item>
-                                <NavDropdown.Item href="" onClick={()=>history.push('/holder-group')}>Holder Group Master</NavDropdown.Item>
+                                <NavDropdown.Item href="" onClick={()=>history.push('/holder-group-master')}>Holder Group Master</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown
                                 title="Transactions"
