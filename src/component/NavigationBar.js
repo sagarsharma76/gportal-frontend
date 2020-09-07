@@ -41,7 +41,7 @@ class NavigationBar extends React.Component {
                             >
                                 <NavDropdown.Item href="" onClick={()=>history.push('/account-master')}>Account Name Master</NavDropdown.Item>
                                 <NavDropdown.Item href="" onClick={()=>history.push('/holder-master')}>Account Holder Master</NavDropdown.Item>
-                                <NavDropdown.Item href="" onClick={()=>history.push('/company')}>Company Master</NavDropdown.Item>
+                                <NavDropdown.Item href="" onClick={()=>history.push('/company-master')}>Company Master</NavDropdown.Item>
                                 <NavDropdown.Item href="" onClick={()=>history.push('/holder-group-master')}>Holder Group Master</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown

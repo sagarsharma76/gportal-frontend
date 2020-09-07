@@ -4,6 +4,8 @@ import { createLogger } from 'redux-logger';
 import AuthenticationReducer from './state/AuthenticationReducer';
 import HolderGroupMasterReducer from './state/HolderGroupMasterReducer';
 import AccountHolderMasterReducer from './state/AccountHolderMasterReducer'
+import CompanyMasterReducer from './state/CompanyMasterReducer';
+import AccountNameMasterReducer from './state/AccountNameMasterReducer'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -19,7 +21,9 @@ const rootReducers = combineReducers({
     // authState: AuthReducer,
     authenticationReducer: AuthenticationReducer,
     holderGroupMasterReducer:HolderGroupMasterReducer,
-    accountHolderMasterReducer:AccountHolderMasterReducer
+    accountHolderMasterReducer:AccountHolderMasterReducer,
+    companyMasterReducer:CompanyMasterReducer,
+    accountNameMasterReducer:AccountNameMasterReducer
     //state items: state Reducer
 });
 

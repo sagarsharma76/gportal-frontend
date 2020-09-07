@@ -24,6 +24,21 @@ export function getStatusListSuccess(list){
     return { type: ActionTypes.GET_STATUS_LIST_SUCCESS, list }
 }
 
+export function getCompanyMasterListSuccess(list){
+    return { type: ActionTypes.GET_COMPANY_MASTER_LIST_SUCCESS, list }
+}
+export function getCompanyMasterListFailure(error) { 
+    return { type: ActionTypes.GET_COMPANY_MASTER_LIST_FAILURE, error } 
+}
+
+export function getAccountNameMasterListSuccess(list){
+    return { type: ActionTypes.GET_ACCOUNT_NAME_MASTER_LIST_SUCCESS, list }
+}
+export function getAccountNameMasterListFailure(error) { 
+    return { type: ActionTypes.GET_ACCOUNT_NAME_MASTER_LIST_FAILURE, error } 
+}
+
+
 export function login(username, password) {
     return dispatch => {
         dispatch(request({ username }));

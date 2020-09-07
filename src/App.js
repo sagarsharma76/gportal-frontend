@@ -26,7 +26,7 @@ class App extends React.Component {
                         <PrivateRoute exact path="/" component={HomePage} />
                         <PrivateRoute exact path="/account-master" component={AccountNameMaster} />
                         <PrivateRoute exact path="/holder-master" component={AccountHolderMaster} />
-                        <PrivateRoute exact path="/company" component={CompanyMaster} />
+                        <PrivateRoute exact path="/company-master" component={CompanyMaster} />
                         <PrivateRoute exact path="/holder-group-master" component={HolderGroupMaster} />
                         <Route path="/login" component={LoginPage} />
                     </div>

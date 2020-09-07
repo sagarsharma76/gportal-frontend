@@ -55,7 +55,7 @@ class AccountHolderMaster extends React.Component {
                     .then(response => {
                         console.log(response)
                         this.getAccountHolderMasterList();
-                        this.setState({ isDisabled: true,activeAccount:response.data })
+                        this.setState({ isDisabled: true, activeAccount: response.data })
                     })
             }
         }
@@ -94,7 +94,7 @@ class AccountHolderMaster extends React.Component {
             accountHolderMasterService.deleteAccountHolderMaster(this.state.activeAccount.id)
                 .then(response => {
                     console.log(response)
-                    this.setState({activeAccount: { id: '', name: '', userName: '', password: '', remarks: '', mobileNumber: '', holderGroupMasterId: '',statusId:'' } })
+                    this.setState({ activeAccount: { id: '', name: '', userName: '', password: '', remarks: '', mobileNumber: '', holderGroupMasterId: '', statusId: '' } })
                     this.getAccountHolderMasterList();
                 })
         }
@@ -177,7 +177,7 @@ class AccountHolderMaster extends React.Component {
                                 </div>
                                 <div className="inner-search-box">
                                     <ul className="list-group">
-                                        <li className="heading list-group-item disabled">Group Name</li>
+                                        <li className="heading list-group-item disabled">Holder Name</li>
                                         {items}
                                     </ul>
                                 </div>
@@ -233,11 +233,11 @@ class AccountHolderMaster extends React.Component {
                                             <div className="col-6" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
                                                 <label className="lbl-form" htmlFor="password">Status :</label>
                                                 <select disabled={isDisabled} value={statusId} class="custom-select mr-sm-2 form-control" name="statusId" id="inlineFormCustomSelect" onChange={this.handleChange}>
-                                                <option selected value=""></option>
+                                                    <option selected value=""></option>
                                                     {statusItems}
                                                 </select>
                                                 {/* <select type="password" disabled={isDisabled} value={password} className="form-control" name="password" onChange={this.handleChange} /> */}
-                                                {isSubmitted && !password &&
+                                                {isSubmitted && !statusId &&
                                                     <div className="help-block">Password is required</div>
                                                 }
                                             </div>
