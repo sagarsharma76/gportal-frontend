@@ -11,7 +11,7 @@ export function login(username, password) {
     return http.getMethod(apiEndpoint, headers
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'Login Failed';
@@ -36,7 +36,7 @@ export function getStatusList(){
     return http.getMethod(apiEndpoint, headers
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';

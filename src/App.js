@@ -1,9 +1,8 @@
 import React from 'react';
-import { Router, Route , Link} from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { history } from './helpers/history';
-import * as actions from './state/actions';
 import PrivateRoute from './PrivateRoute';
 import HomePage from './component/HomePage';
 import LoginPage from './component/Login';
@@ -13,12 +12,8 @@ import CompanyMaster from './component/CompanyMaster';
 import HolderGroupMaster from './component/HolderGroupMaster';
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
-        const { alert } = this.props;
         return (
             <div className="App">
                 <Router history={history}>

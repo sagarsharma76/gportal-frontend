@@ -12,7 +12,7 @@ export function getAll() {
     return http.getMethod(apiEndpoint, headers
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
@@ -34,7 +34,7 @@ export function save(holderGroupMaster) {
     return http.postMethod(apiEndpoint, holderGroupMaster, headers
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
@@ -58,7 +58,7 @@ export function update(holderGroupMaster) {
     return http.putMethod(apiEndpoint, body, headers
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
@@ -80,7 +80,7 @@ export function deleteHolderGroupMaster(holderGroupMasterId) {
     return http.deleteMethod(apiEndpoint
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';

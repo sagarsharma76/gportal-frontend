@@ -3,9 +3,6 @@ import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons';
 import { history } from '../helpers/history';
 
-
-import * as actions from '../state/actions';
-
 class NavigationBar extends React.Component {
    
 

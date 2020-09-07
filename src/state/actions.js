@@ -1,6 +1,5 @@
 import * as ActionTypes from "./action-types";
 import * as loginService from "../service/LoginService";
-import * as holderGroupMasterService from "../service/HolderGroupMasterService";
 import { history } from '../helpers/history';
 
 export function request(user) { return { type: ActionTypes.LOGIN_REQUEST, user } }

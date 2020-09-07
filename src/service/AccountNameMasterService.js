@@ -12,7 +12,7 @@ export function getAll() {
     return http.getMethod(apiEndpoint, headers
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
@@ -33,7 +33,7 @@ export function save(accountNameMaster) {
     return http.postMethod(apiEndpoint, accountNameMaster, headers
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
@@ -57,7 +57,7 @@ export function update(accountNameMaster) {
     return http.putMethod(apiEndpoint, body, headers
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
@@ -79,7 +79,7 @@ export function deleteAccountNameMaster(accountNameMasterId) {
     return http.deleteMethod(apiEndpoint
     ).then(response => {
         console.log(response);
-        if (response.success == true) {
+        if (response.success === true) {
             return response
         } else {
             const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';

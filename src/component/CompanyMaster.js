@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Navbar, Nav, NavDropdown, FormControl, Form, Button } from 'react-bootstrap'
+import { Navbar, FormControl, Button } from 'react-bootstrap'
 import NavigationBar from './NavigationBar'
 import * as Icon from 'react-bootstrap-icons';
 import * as companyMasterService from "../service/CompanyMasterService";
@@ -125,7 +124,7 @@ class CompanyMaster extends React.Component {
 
     validate() {
         const activeAccount = this.state.activeAccount;
-        if (activeAccount.name == '' || activeAccount.userName == '' || activeAccount.password == '' || activeAccount.remarks == '') {
+        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '' || activeAccount.remarks === '') {
             this.setState({ isSubmitted: true })
             return false;
         }
@@ -139,7 +138,7 @@ class CompanyMaster extends React.Component {
         const items = []
         const elements = this.state.searchResult;
         for (const [index, value] of elements.entries()) {
-            items.push(<li className={activeAccount.name == value.name ? "active item list-group-item" : "item list-group-item"}
+            items.push(<li className={activeAccount.name === value.name ? "active item list-group-item" : "item list-group-item"}
                 onClick={() => this.setState({ activeAccount: value, isDisabled: true, isSubmitted: false })} key={index}>{value.name}</li>)
         }
 

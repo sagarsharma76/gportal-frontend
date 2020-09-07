@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import NavigationBar from './NavigationBar'
 import * as loginService from "../service/LoginService";
@@ -14,12 +13,6 @@ class HomePage extends React.Component {
 
         // reset login status
         this.props.dispatch(actions.logout());
-
-        this.state = {
-            username: '',
-            password: '',
-            submitted: false
-        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -91,8 +84,6 @@ class HomePage extends React.Component {
     }
 
     render() {
-        const { loggingIn } = this.props;
-        const { username, password, submitted } = this.state;
         return (
             <div>
             <NavigationBar/>
