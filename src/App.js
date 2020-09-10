@@ -10,6 +10,7 @@ import AccountNameMaster from './component/AccountNameMaster';
 import AccountHolderMaster from './component/AccountHolderMaster';
 import CompanyMaster from './component/CompanyMaster';
 import HolderGroupMaster from './component/HolderGroupMaster';
+import CompanyWiseEntry from './component/CompanyWiseEntry'
 
 class App extends React.Component {
 
@@ -23,6 +24,7 @@ class App extends React.Component {
                         <PrivateRoute exact path="/holder-master" component={AccountHolderMaster} />
                         <PrivateRoute exact path="/company-master" component={CompanyMaster} />
                         <PrivateRoute exact path="/holder-group-master" component={HolderGroupMaster} />
+                        <PrivateRoute exact path="/data-entry-company" component={CompanyWiseEntry} />
                         <Route path="/login" component={LoginPage} />
                     </div>
                 </Router>

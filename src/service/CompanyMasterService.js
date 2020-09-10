@@ -91,3 +91,51 @@ export function deleteCompanyMaster(companyMasterId) {
         return Promise.reject(error);
     })
 }
+
+export function getCompanyTransactions(companyId){
+    let apiEndpoint = '/company/master/transactions/' + companyId;
+    let headers = {
+        // 'Access-Control-Allow-Origin': '*',
+        // 'access-control-allow-credentials': true,
+        // 'content-type': 'application/json'
+    }
+    return http.getMethod(apiEndpoint
+    ).then(response => {
+        console.log(response);
+        if (response.success === true) {
+            return response
+        } else {
+            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            return Promise.reject(error);
+        }
+    })
+    .catch(error => {
+        return Promise.reject(error);
+    })
+}
+
+export function saveCompanyAccountTransaction(transaction){
+    let apiEndpoint = '/anm/transactions/' + transaction.id;
+    let headers = {
+        // 'Access-Control-Allow-Origin': '*',
+        // 'access-control-allow-credentials': true,
+        'content-type': 'application/json'
+    }
+
+    let body = {
+        'balance':transaction.balance
+    }
+    return http.putMethod(apiEndpoint,body,headers
+    ).then(response => {
+        console.log(response);
+        if (response.success === true) {
+            return response
+        } else {
+            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            return Promise.reject(error);
+        }
+    })
+    .catch(error => {
+        return Promise.reject(error);
+    })
+}

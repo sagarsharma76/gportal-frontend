@@ -155,6 +155,31 @@ body, html, .App, #root, .auth-wrapper {
   margin-bottom:0rem;
 }
 
+.lbl-heading{
+  margin-top: 0.2rem;
+  margin-bottom:0.2rem;
+  font-size: 26px;
+}
+
 .help-block{
   color:red;
+}
+
+.work-section{
+  padding:0px !important;
+}
+
+th {
+  padding:0.2rem !important;
+  font-size:0.9rem;
+  background-color: #003a48;
+  color:white;
+}
+
+td{
+  padding:0.2rem !important;
+  font-size:0.9rem;
+  background-color: #ecfbfb;
+  color:black;
+  border: 2px groove !important;
 }

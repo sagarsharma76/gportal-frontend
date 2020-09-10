@@ -209,7 +209,7 @@ class AccountNameMaster extends React.Component {
                                     </Navbar>
                                 </div>
                                 <div className="inner-work-box row">
-                                    <div className="col-7">
+                                    <div className="work-section col-7">
                                         <div >
                                             <label className="lbl-form" htmlFor="name">Name:</label>
                                             <input type="text" disabled={isDisabled} value={name} className="form-control" name="name" onChange={this.handleChange} />
