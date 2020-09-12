@@ -23,13 +23,12 @@ class CompanyWiseEntry extends React.Component {
             isDisabled: true,
             isUpdateCall: false,
             isSubmitted: false,
-            date: date,
-            obalanceSum: 0,
-            balanceSum: 0
+            date: date
         };
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
-        this.clearTransactions = this.clearTransactions.bind(this);
+        this.clearForm = this.clearForm.bind(this);
+        this.deleteCompanyMaster = this.deleteCompanyMaster.bind(this);
     }
 
     componentDidMount() {
@@ -65,7 +64,7 @@ class CompanyWiseEntry extends React.Component {
                 console.log(companyMasterList)
                 this.setState({ searchResult: companyMasterList, isSubmitted: false, activeAccount: companyMasterList[0] })
                 if (companyMasterList != []) {
-                    this.getCompanyTransactions(companyMasterList[0]);
+                    this.getCompanyTransactions(companyMasterList[0].id);
                 }
 
             })
@@ -74,62 +73,51 @@ class CompanyWiseEntry extends React.Component {
             })
     }
 
-    getCompanyTransactions(company) {
+    getCompanyTransactions(id) {
         const { dispatch } = this.props;
         dispatch(actions.request());
-        companyMasterService.getCompanyTransactions(company.id)
+        companyMasterService.getCompanyTransactions(id)
             .then(response => {
                 console.log(response);
-                let activeCompanyTransaction = response.data;
-                let obalanceSum = 0;
-                let balanceSum = 0;
-                const transactions = activeCompanyTransaction.transactions;
-                if (transactions != null) {
-                    for (let tran of transactions) {
-                        obalanceSum = obalanceSum + tran.obalance;
-                        balanceSum = balanceSum + tran.balance;
-                        let { pointPnl, profitLoss } = tran;
-                        tran.pointPnl = pointPnl.toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
-                        });
-                        tran.profitLoss = profitLoss.toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
-                            style: 'currency',
-                            currency: 'INR'
-                        });
-                    }
-                }
-
-                this.setState({ activeCompanyTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: company });
+                this.setState({ activeCompanyTransaction: response.data });
             })
+    }
+
+    deleteCompanyMaster() {
+        if (window.confirm('Are you sure you wish to delete this group?')) {
+            const { dispatch } = this.props;
+            dispatch(actions.request());
+            companyMasterService.deleteCompanyMaster(this.state.activeAccount.id)
+                .then(response => {
+                    console.log(response)
+                    this.setState({ activeAccount: { id: '', name: '', baseRate: '', remarks: '' } });
+                    this.getCompanyMasterList();
+                })
+                .catch(error => {
+                    alert("Failed to delete Group Holder List.\nError:" + error)
+                })
+        }
     }
 
     handleChange(e, index) {
         const { name, value } = e.target;
-        if (RegExp('/^[+-]?\d+(\.\d+)?$/').test(value)===true) {
-            const activeCompanyTransaction = { ...this.state.activeCompanyTransaction };
-            const transactions = activeCompanyTransaction.transactions;
-            transactions[index].balance = value;
-            const { rate, base, balance } = transactions[index];
-            let pointPnl = (balance - base)
-            let profitLoss = (pointPnl * rate)
+        const activeCompanyTransaction = { ...this.state.activeCompanyTransaction };
+        const transactions = activeCompanyTransaction.transactions;
+        transactions[index].balance = value;
+        const { rate, base, balance } = transactions[index];
+        let pointPnl = (balance - base)
+        let profitLoss = (pointPnl * rate)
 
-            transactions[index].pointPnl = pointPnl.toLocaleString('en-IN', {
-                maximumFractionDigits: 2,
-            });
-            transactions[index].profitLoss = profitLoss.toLocaleString('en-IN', {
-                maximumFractionDigits: 2,
-                style: 'currency',
-                currency: 'INR'
-            });
-            let obalanceSum = 0;
-            let balanceSum = 0;
-            for (let tran of transactions) {
-                balanceSum = balanceSum + Number.parseFloat(tran.balance);
-            }
+        transactions[index].pointPnl = pointPnl.toLocaleString('en-IN', {
+            maximumFractionDigits: 2,
+        });
+        transactions[index].profitLoss = profitLoss.toLocaleString('en-IN', {
+            maximumFractionDigits: 2,
+            style: 'currency',
+            currency: 'INR'
+        });
 
-            this.setState({ activeCompanyTransaction: activeCompanyTransaction, balanceSum: balanceSum });
-        }
+        this.setState({ activeCompanyTransaction: activeCompanyTransaction });
     }
 
     handleSearchChange(e) {
@@ -140,26 +128,30 @@ class CompanyWiseEntry extends React.Component {
         this.setState({ searchResult: result })
     }
 
-    clearTransactions(company) {
-        const { dispatch } = this.props;
-        dispatch(actions.request());
-        companyMasterService.clearCompanyTransations(company.id)
-            .then(response => {
-                console.log(response);
-                this.getCompanyTransactions(company)
-            })
+    clearForm() {
+        const isDisabled = this.state.isDisabled;
+        this.setState({ isDisabled: !isDisabled, isSubmitted: false, activeAccount: { id: '', name: '', baseRate: '', remarks: '' } });
+    }
+
+    validate() {
+        const activeAccount = this.state.activeAccount;
+        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '' || activeAccount.remarks === '') {
+            this.setState({ isSubmitted: true })
+            return false;
+        }
+        return true;
     }
 
     render() {
         const { loggingIn } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction } = this.state;
         const { name, baseRate, remarks } = activeAccount;
         const { lastSaved } = activeCompanyTransaction;
         const items = []
         const elements = this.state.searchResult;
         for (const [index, value] of elements.entries()) {
-            items.push(<li className={activeCompanyTransaction.id === value.id ? "active item list-group-item" : "item list-group-item"}
-                onClick={() => this.getCompanyTransactions(value)} key={index}>{value.name}</li>)
+            items.push(<li className={activeAccount.name === value.name ? "active item list-group-item" : "item list-group-item"}
+                onClick={() => this.setState({ activeAccount: value, isDisabled: true, isSubmitted: false })} key={index}>{value.name}</li>)
         }
 
         const transactionRows = []
@@ -211,14 +203,14 @@ class CompanyWiseEntry extends React.Component {
                                 <div hidden={!isDisabled}>
                                     <Navbar bg="dark" variant="dark">
                                         <div className="btn-component">
-                                            <Button variant="success"><Icon.Plus />Save</Button>
+                                            <Button variant="success" onClick={this.clearForm}><Icon.Plus />New</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="danger"
-                                                onClick={() => this.clearTransactions(this.state.activeAccount)}><Icon.Check />Clear</Button>
+                                            <Button variant="primary"
+                                                onClick={() => this.setState({ isDisabled: false, isUpdateCall: true })}><Icon.Check />Modify</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="primary" onClick={this.deleteCompanyMaster}><Icon.Trash />Print</Button>
+                                            <Button variant="danger" onClick={this.deleteCompanyMaster}><Icon.Trash />Delete</Button>
                                         </div>
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
@@ -238,15 +230,15 @@ class CompanyWiseEntry extends React.Component {
                                 <div className="inner-work-box row">
                                     <div className="work-section col-12">
                                         <div className="row">
-                                            <div className="col-5" style={{ 'padding': '0px' }}>
+                                            <div className="col-3" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-heading" htmlFor="name">Company : {name}</label>
                                                 {/* <input type="text" disabled={isDisabled} value={name} className="form-control" name="name" onChange={this.handleChange} />
                                                 {isSubmitted && !name &&
                                                     <div className="help-block">Name is required</div>
                                                 } */}
                                             </div>
-                                            <div className="col-2" style={{ 'padding': '0px' }}></div>
-                                            <div className="col-2" style={{ 'padding': '0px' }}></div>
+                                            <div className="col-3" style={{ 'padding': '0px' }}></div>
+                                            <div className="col-3" style={{ 'padding': '0px' }}></div>
                                             <div className="col-3" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-heading" htmlFor="userName">Date : {date}</label>
                                                 {/* <input type="text" disabled={isDisabled} value={baseRate} className="form-control" name="baseRate" onChange={this.handleChange} />
@@ -278,11 +270,11 @@ class CompanyWiseEntry extends React.Component {
                                                         <th scope="col">Total</th>
                                                         <th scope="col"></th>
                                                         <th scope="col"></th>
-                                                        <th scope="col">{obalanceSum}</th>
+                                                        <th scope="col">OBalance</th>
                                                         <th scope="col"></th>
-                                                        <th scope="col"></th>
-                                                        <th scope="col">{balanceSum}</th>
-                                                        <th scope="col"></th>
+                                                        <th scope="col">Base</th>
+                                                        <th scope="col">Balance</th>
+                                                        <th scope="col">Point P/L</th>
                                                         <th scope="col">Profit/Loss (₹)</th>
                                                     </tr>
                                                 </tfoot>

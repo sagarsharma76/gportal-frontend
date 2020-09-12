@@ -139,3 +139,26 @@ export function saveCompanyAccountTransaction(transaction){
         return Promise.reject(error);
     })
 }
+
+export function clearCompanyTransations(companyId){
+    let apiEndpoint = '/company/master/transactions/' + companyId + "/clear";
+    let headers = {
+        // 'Access-Control-Allow-Origin': '*',
+        // 'access-control-allow-credentials': true,
+        // 'content-type': 'application/json'
+    }
+    return http.putMethod(apiEndpoint
+    ).then(response => {
+        console.log(response);
+        if (response.success === true) {
+            return response
+        } else {
+            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            return Promise.reject(error);
+        }
+    })
+    .catch(error => {
+        return Promise.reject(error);
+    })
+}
+
