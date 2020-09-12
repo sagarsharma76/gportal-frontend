@@ -5,6 +5,7 @@ import NavigationBar from './NavigationBar'
 import * as Icon from 'react-bootstrap-icons';
 import * as companyMasterService from "../service/CompanyMasterService";
 import { history } from './../helpers/history';
+import ReactToPrint from 'react-to-print'
 
 import * as actions from '../state/actions';
 
@@ -27,6 +28,8 @@ class CompanyWiseEntry extends React.Component {
             obalanceSum: 0,
             balanceSum: 0
         };
+
+        this.myRef = React.createRef();
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.clearTransactions = this.clearTransactions.bind(this);
@@ -106,7 +109,7 @@ class CompanyWiseEntry extends React.Component {
 
     handleChange(e, index) {
         const { name, value } = e.target;
-        if (RegExp('/^[+-]?\d+(\.\d+)?$/').test(value)===true) {
+        if (true) {
             const activeCompanyTransaction = { ...this.state.activeCompanyTransaction };
             const transactions = activeCompanyTransaction.transactions;
             transactions[index].balance = value;
@@ -149,6 +152,7 @@ class CompanyWiseEntry extends React.Component {
                 this.getCompanyTransactions(company)
             })
     }
+
 
     render() {
         const { loggingIn } = this.props;
@@ -208,30 +212,37 @@ class CompanyWiseEntry extends React.Component {
                         </div>
                         <div className="outer-work-panel col-sm-9">
                             <div className="inner-work-panel">
-                                <div hidden={!isDisabled}>
+                                <div>
                                     <Navbar bg="dark" variant="dark">
                                         <div className="btn-component">
-                                            <Button variant="success"><Icon.Plus />Save</Button>
+                                            <Button variant="success"><Icon.FileEarmark />Save</Button>
                                         </div>
                                         <div className="btn-component">
                                             <Button variant="danger"
-                                                onClick={() => this.clearTransactions(this.state.activeAccount)}><Icon.Check />Clear</Button>
+                                                onClick={() => this.clearTransactions(this.state.activeAccount)}><Icon.Trash />Clear</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="primary" onClick={this.deleteCompanyMaster}><Icon.Trash />Print</Button>
+                                            <Button variant="primary" onClick={()=>window.print()}><Icon.Printer />Print</Button>
                                         </div>
+                                        {/* <div>
+                                            <ReactToPrint
+                                                trigger={() => {
+                                                    return (
+                                                        <div className="btn-component">
+                                                            <Button variant="primary"><Icon.Printer />Print</Button>
+                                                        </div>
+                                                    )
+                                                }}
+                                                content={() => this.myRef}
+                                            />
+                                        </div> */}
+
+
+
+
+
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
-                                        </div>
-                                    </Navbar>
-                                </div>
-                                <div hidden={isDisabled}>
-                                    <Navbar bg="dark" variant="dark">
-                                        <div className="btn-component">
-                                            <Button variant="success" onClick={this.saveOrUpdatecompanyMaster}><Icon.FileEarmark />Save</Button>
-                                        </div>
-                                        <div className="btn-component">
-                                            <Button variant="warning" onClick={this.clearForm}><Icon.X />Cancel</Button>
                                         </div>
                                     </Navbar>
                                 </div>
@@ -256,7 +267,7 @@ class CompanyWiseEntry extends React.Component {
                                             </div>
                                         </div>
                                         <div className="table-wrapper table-responsive">
-                                            <table className="table table-borderless">
+                                            <table className="table table-borderless" ref={this.myRef}>
                                                 <thead>
                                                     <tr>
                                                         <th scope="col" style={{ 'width': '5%' }}>Sr.</th>
@@ -283,7 +294,7 @@ class CompanyWiseEntry extends React.Component {
                                                         <th scope="col"></th>
                                                         <th scope="col">{balanceSum}</th>
                                                         <th scope="col"></th>
-                                                        <th scope="col">Profit/Loss (₹)</th>
+                                                        <th scope="col"></th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
