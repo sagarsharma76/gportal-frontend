@@ -4,11 +4,12 @@ import { Navbar, FormControl, Button } from 'react-bootstrap'
 import NavigationBar from './NavigationBar'
 import * as Icon from 'react-bootstrap-icons';
 import * as companyMasterService from "../service/CompanyMasterService";
+import * as accountHolderMasterService from "../service/AccountHolderMasterService";
 import { history } from './../helpers/history';
 
 import * as actions from '../state/actions';
 
-class CompanyWiseEntry extends React.Component {
+class HolderWiseEntry extends React.Component {
     constructor(props) {
         super(props);
 
@@ -19,33 +20,31 @@ class CompanyWiseEntry extends React.Component {
             searchTerm: '',
             searchResult: [],
             activeAccount: { id: '', name: '', userName: '', password: '', remarks: '' },
-            activeCompanyTransaction: {},
-            isDisabled: true,
-            isUpdateCall: false,
-            isSubmitted: false,
-            date: date
+            activeAccountHolderTransaction: {},
+            date: date,
+            obalanceSum: 0,
+            balanceSum: 0
         };
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
-        this.clearForm = this.clearForm.bind(this);
-        this.deleteCompanyMaster = this.deleteCompanyMaster.bind(this);
+        this.clearTransactions = this.clearTransactions.bind(this);
     }
 
     componentDidMount() {
-        this.getCompanyMasterList();
+        this.getAccountHolderMasterList();
     }
 
     handleKeyDown(e, index) {
         if (e.key === 'Enter') {
-            this.saveCompanyAccountTransaction(index);
+            this.saveAccountHolderTransaction(index);
         }
     }
 
-    saveCompanyAccountTransaction(index) {
+    saveAccountHolderTransaction(index) {
         const { dispatch } = this.props;
         dispatch(actions.request());
-        const transaction = this.state.activeCompanyTransaction.transactions[index];
-        companyMasterService.saveCompanyAccountTransaction(transaction)
+        const transaction = this.state.activeAccountHolderTransaction.transactions[index];
+        accountHolderMasterService.saveAccountHolderTransaction(transaction)
             .then(response => {
                 console.log(response)
             })
@@ -54,70 +53,63 @@ class CompanyWiseEntry extends React.Component {
             })
     }
 
-    getCompanyMasterList() {
+    getAccountHolderMasterList() {
         const { dispatch } = this.props;
         dispatch(actions.request());
-        companyMasterService.getAll()
+        accountHolderMasterService.getAll()
             .then(response => {
-                dispatch(actions.getCompanyMasterListSuccess(response.data));
-                const { companyMasterList } = this.props;
-                console.log(companyMasterList)
-                this.setState({ searchResult: companyMasterList, isSubmitted: false, activeAccount: companyMasterList[0] })
-                if (companyMasterList != []) {
-                    this.getCompanyTransactions(companyMasterList[0].id);
+                console.log(response)
+                dispatch(actions.getAccountHolderMasterListSuccess(response.data));
+                const { accountHolderMasterList } = this.props;
+                if (accountHolderMasterList != []) {
+                    this.setState({ searchResult: accountHolderMasterList, isSubmitted: false, activeAccount: accountHolderMasterList[0] })
+                    this.getAccountHolderTransactions(accountHolderMasterList[0]);
+                }
+            }).catch(error => {
+                alert("Failed to load account Holder List.\nError:" + error)
+            })
+    }
+
+    getAccountHolderTransactions(accountHolder) {
+        const { dispatch } = this.props;
+        dispatch(actions.request());
+        accountHolderMasterService.getAccountHolderTransactions(accountHolder.id)
+            .then(response => {
+
+                console.log(response);
+                let activeAccountHolderTransaction = response.data;
+                let obalanceSum = 0;
+                let balanceSum = 0;
+                const transactions = activeAccountHolderTransaction.transactions;
+                if (transactions != null) {
+                    for (let tran of transactions) {
+                        obalanceSum = obalanceSum + tran.obalance;
+                        balanceSum = balanceSum + tran.balance;
+                    }
                 }
 
+                this.setState({ activeAccountHolderTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: accountHolder });
+            }).catch(error => {
+                alert("Failed to load account Holder transactions.\nError:" + error)
             })
-            .catch(error => {
-                alert("Failed to load Group Holder List.\nError:" + error)
-            })
-    }
-
-    getCompanyTransactions(id) {
-        const { dispatch } = this.props;
-        dispatch(actions.request());
-        companyMasterService.getCompanyTransactions(id)
-            .then(response => {
-                console.log(response);
-                this.setState({ activeCompanyTransaction: response.data });
-            })
-    }
-
-    deleteCompanyMaster() {
-        if (window.confirm('Are you sure you wish to delete this group?')) {
-            const { dispatch } = this.props;
-            dispatch(actions.request());
-            companyMasterService.deleteCompanyMaster(this.state.activeAccount.id)
-                .then(response => {
-                    console.log(response)
-                    this.setState({ activeAccount: { id: '', name: '', baseRate: '', remarks: '' } });
-                    this.getCompanyMasterList();
-                })
-                .catch(error => {
-                    alert("Failed to delete Group Holder List.\nError:" + error)
-                })
-        }
     }
 
     handleChange(e, index) {
         const { name, value } = e.target;
-        const activeCompanyTransaction = { ...this.state.activeCompanyTransaction };
-        const transactions = activeCompanyTransaction.transactions;
+        const activeAccountHolderTransaction = { ...this.state.activeAccountHolderTransaction };
+        const transactions = activeAccountHolderTransaction.transactions;
         transactions[index].balance = value;
         const { rate, base, balance } = transactions[index];
         let pointPnl = (balance - base)
         let profitLoss = (pointPnl * rate)
+        transactions[index].pointPnl = pointPnl
+        transactions[index].profitLoss = profitLoss
+        let balanceSum = 0;
+        for (let tran of transactions) {
+            balanceSum = balanceSum + Number.parseFloat(tran.balance);
+        }
 
-        transactions[index].pointPnl = pointPnl.toLocaleString('en-IN', {
-            maximumFractionDigits: 2,
-        });
-        transactions[index].profitLoss = profitLoss.toLocaleString('en-IN', {
-            maximumFractionDigits: 2,
-            style: 'currency',
-            currency: 'INR'
-        });
-
-        this.setState({ activeCompanyTransaction: activeCompanyTransaction });
+        this.setState({ activeAccountHolderTransaction: activeAccountHolderTransaction, balanceSum: balanceSum });
     }
 
     handleSearchChange(e) {
@@ -128,34 +120,30 @@ class CompanyWiseEntry extends React.Component {
         this.setState({ searchResult: result })
     }
 
-    clearForm() {
-        const isDisabled = this.state.isDisabled;
-        this.setState({ isDisabled: !isDisabled, isSubmitted: false, activeAccount: { id: '', name: '', baseRate: '', remarks: '' } });
-    }
-
-    validate() {
-        const activeAccount = this.state.activeAccount;
-        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '' || activeAccount.remarks === '') {
-            this.setState({ isSubmitted: true })
-            return false;
-        }
-        return true;
+    clearTransactions(accountHolder) {
+        const { dispatch } = this.props;
+        dispatch(actions.request());
+        accountHolderMasterService.clearAccountHolderTransations(accountHolder.id)
+            .then(response => {
+                console.log(response);
+                this.getAccountHolderTransactions(accountHolder.id)
+            })
     }
 
     render() {
         const { loggingIn } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeAccountHolderTransaction, obalanceSum, balanceSum } = this.state;
         const { name, baseRate, remarks } = activeAccount;
-        const { lastSaved } = activeCompanyTransaction;
+        const { lastSaved } = activeAccountHolderTransaction;
         const items = []
         const elements = this.state.searchResult;
         for (const [index, value] of elements.entries()) {
             items.push(<li className={activeAccount.name === value.name ? "active item list-group-item" : "item list-group-item"}
-                onClick={() => this.setState({ activeAccount: value, isDisabled: true, isSubmitted: false })} key={index}>{value.name}</li>)
+                onClick={() => this.getAccountHolderTransactions(value)} key={index}>{value.name}</li>)
         }
 
         const transactionRows = []
-        const transactions = activeCompanyTransaction.transactions || [];
+        const transactions = activeAccountHolderTransaction.transactions || [];
         let srNum = 1;
         for (const [index, value] of transactions.entries()) {
             transactionRows.push(
@@ -169,8 +157,20 @@ class CompanyWiseEntry extends React.Component {
                     <td><input style={{ 'width': '80%' }} type="text" value={value.balance} name="balance"
                         onChange={(e) => this.handleChange(e, index)}
                         onKeyDown={(e) => this.handleKeyDown(e, index)} /></td>
-                    <td>{value.pointPnl}</td>
-                    <td>{value.profitLoss}</td>
+                    <td style={{ 'background-color': value.pointPnl >= 0 ? '#b6daad' : '#f1a9b4' }}>
+                        {value.pointPnl.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR'
+                        })}
+                    </td>
+                    <td style={{ 'background-color': value.profitLoss >= 0 ? '#b6daad' : '#f1a9b4' }}>
+                        {value.profitLoss.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR'
+                        })}
+                    </td>
                 </tr>
             )
             srNum++;
@@ -200,45 +200,48 @@ class CompanyWiseEntry extends React.Component {
                         </div>
                         <div className="outer-work-panel col-sm-9">
                             <div className="inner-work-panel">
-                                <div hidden={!isDisabled}>
+                                <div>
                                     <Navbar bg="dark" variant="dark">
                                         <div className="btn-component">
-                                            <Button variant="success" onClick={this.clearForm}><Icon.Plus />New</Button>
+                                            <Button variant="success"><Icon.FileEarmark />Save</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="primary"
-                                                onClick={() => this.setState({ isDisabled: false, isUpdateCall: true })}><Icon.Check />Modify</Button>
+                                            <Button variant="danger"
+                                                onClick={() => this.clearTransactions(this.state.activeAccount)}><Icon.Trash />Clear</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="danger" onClick={this.deleteCompanyMaster}><Icon.Trash />Delete</Button>
+                                            <Button variant="primary" onClick={() => window.print()}><Icon.Printer />Print</Button>
                                         </div>
+                                        {/* <div className="btn-component">
+                                            <ReactToPrint
+                                                trigger={() => {
+                                                    return (
+                                                        <div>
+                                                            <Button variant="primary"><Icon.Printer />Print</Button>
+                                                        </div>
+                                                    )
+                                                }}
+                                                content={() => this.myRef}
+                                            />
+                                        </div> */}
+
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
-                                        </div>
-                                    </Navbar>
-                                </div>
-                                <div hidden={isDisabled}>
-                                    <Navbar bg="dark" variant="dark">
-                                        <div className="btn-component">
-                                            <Button variant="success" onClick={this.saveOrUpdatecompanyMaster}><Icon.FileEarmark />Save</Button>
-                                        </div>
-                                        <div className="btn-component">
-                                            <Button variant="warning" onClick={this.clearForm}><Icon.X />Cancel</Button>
                                         </div>
                                     </Navbar>
                                 </div>
                                 <div className="inner-work-box row">
                                     <div className="work-section col-12">
                                         <div className="row">
-                                            <div className="col-3" style={{ 'padding': '0px' }}>
-                                                <label className="lbl-heading" htmlFor="name">Company : {name}</label>
+                                            <div className="col-5" style={{ 'padding': '0px' }}>
+                                                <label className="lbl-heading" htmlFor="name">Holder : {name}</label>
                                                 {/* <input type="text" disabled={isDisabled} value={name} className="form-control" name="name" onChange={this.handleChange} />
                                                 {isSubmitted && !name &&
                                                     <div className="help-block">Name is required</div>
                                                 } */}
                                             </div>
-                                            <div className="col-3" style={{ 'padding': '0px' }}></div>
-                                            <div className="col-3" style={{ 'padding': '0px' }}></div>
+                                            <div className="col-2" style={{ 'padding': '0px' }}></div>
+                                            <div className="col-2" style={{ 'padding': '0px' }}></div>
                                             <div className="col-3" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-heading" htmlFor="userName">Date : {date}</label>
                                                 {/* <input type="text" disabled={isDisabled} value={baseRate} className="form-control" name="baseRate" onChange={this.handleChange} />
@@ -270,12 +273,12 @@ class CompanyWiseEntry extends React.Component {
                                                         <th scope="col">Total</th>
                                                         <th scope="col"></th>
                                                         <th scope="col"></th>
-                                                        <th scope="col">OBalance</th>
+                                                        <th scope="col">{obalanceSum}</th>
                                                         <th scope="col"></th>
-                                                        <th scope="col">Base</th>
-                                                        <th scope="col">Balance</th>
-                                                        <th scope="col">Point P/L</th>
-                                                        <th scope="col">Profit/Loss (₹)</th>
+                                                        <th scope="col"></th>
+                                                        <th scope="col">{balanceSum}</th>
+                                                        <th scope="col"></th>
+                                                        <th scope="col"></th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -299,8 +302,8 @@ class CompanyWiseEntry extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        companyMasterList: state.companyMasterReducer.companyMasterList
+        accountHolderMasterList: state.accountHolderMasterReducer.accountHolderMasterList,
     }
 }
 
-export default connect(mapStateToProps)(CompanyWiseEntry);
+export default connect(mapStateToProps)(HolderWiseEntry);

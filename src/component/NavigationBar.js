@@ -48,7 +48,7 @@ class NavigationBar extends React.Component {
                                 onMouseLeave={(e) => document.getElementById("transactions-dropdown").click()}
                             >
                                 <NavDropdown.Item href="" onClick={()=>history.push('/data-entry-company')}>Company wise Entry</NavDropdown.Item>
-                                <NavDropdown.Item href="">Holder wise Entry</NavDropdown.Item>
+                                <NavDropdown.Item href="" onClick={()=>history.push('/data-entry-holder')}>Holder wise Entry</NavDropdown.Item>
                             </NavDropdown>
 
                             <NavDropdown

@@ -21,9 +21,6 @@ class CompanyWiseEntry extends React.Component {
             searchResult: [],
             activeAccount: { id: '', name: '', userName: '', password: '', remarks: '' },
             activeCompanyTransaction: {},
-            isDisabled: true,
-            isUpdateCall: false,
-            isSubmitted: false,
             date: date,
             obalanceSum: 0,
             balanceSum: 0
@@ -91,15 +88,6 @@ class CompanyWiseEntry extends React.Component {
                     for (let tran of transactions) {
                         obalanceSum = obalanceSum + tran.obalance;
                         balanceSum = balanceSum + tran.balance;
-                        let { pointPnl, profitLoss } = tran;
-                        tran.pointPnl = pointPnl.toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
-                        });
-                        tran.profitLoss = profitLoss.toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
-                            style: 'currency',
-                            currency: 'INR'
-                        });
                     }
                 }
 
@@ -116,15 +104,8 @@ class CompanyWiseEntry extends React.Component {
             const { rate, base, balance } = transactions[index];
             let pointPnl = (balance - base)
             let profitLoss = (pointPnl * rate)
-
-            transactions[index].pointPnl = pointPnl.toLocaleString('en-IN', {
-                maximumFractionDigits: 2,
-            });
-            transactions[index].profitLoss = profitLoss.toLocaleString('en-IN', {
-                maximumFractionDigits: 2,
-                style: 'currency',
-                currency: 'INR'
-            });
+            transactions[index].pointPnl = pointPnl
+            transactions[index].profitLoss = profitLoss
             let obalanceSum = 0;
             let balanceSum = 0;
             for (let tran of transactions) {
@@ -155,7 +136,6 @@ class CompanyWiseEntry extends React.Component {
 
 
     render() {
-        const { loggingIn } = this.props;
         const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum } = this.state;
         const { name, baseRate, remarks } = activeAccount;
         const { lastSaved } = activeCompanyTransaction;
@@ -181,8 +161,20 @@ class CompanyWiseEntry extends React.Component {
                     <td><input style={{ 'width': '80%' }} type="text" value={value.balance} name="balance"
                         onChange={(e) => this.handleChange(e, index)}
                         onKeyDown={(e) => this.handleKeyDown(e, index)} /></td>
-                    <td>{value.pointPnl}</td>
-                    <td>{value.profitLoss}</td>
+                    <td style={{ 'background-color': value.pointPnl >= 0 ? '#b6daad' : '#f1a9b4' }}>
+                        {value.pointPnl.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR'
+                        })}
+                    </td>
+                    <td style={{ 'background-color': value.profitLoss >= 0 ? '#b6daad' : '#f1a9b4' }}>
+                        {value.profitLoss.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR'
+                        })}
+                    </td>
                 </tr>
             )
             srNum++;
@@ -222,13 +214,13 @@ class CompanyWiseEntry extends React.Component {
                                                 onClick={() => this.clearTransactions(this.state.activeAccount)}><Icon.Trash />Clear</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="primary" onClick={()=>window.print()}><Icon.Printer />Print</Button>
+                                            <Button variant="primary" onClick={() => window.print()}><Icon.Printer />Print</Button>
                                         </div>
-                                        {/* <div>
+                                        {/* <div className="btn-component">
                                             <ReactToPrint
                                                 trigger={() => {
                                                     return (
-                                                        <div className="btn-component">
+                                                        <div>
                                                             <Button variant="primary"><Icon.Printer />Print</Button>
                                                         </div>
                                                     )
@@ -236,10 +228,6 @@ class CompanyWiseEntry extends React.Component {
                                                 content={() => this.myRef}
                                             />
                                         </div> */}
-
-
-
-
 
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
@@ -267,7 +255,7 @@ class CompanyWiseEntry extends React.Component {
                                             </div>
                                         </div>
                                         <div className="table-wrapper table-responsive">
-                                            <table className="table table-borderless" ref={this.myRef}>
+                                            <table className="table table-borderless">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col" style={{ 'width': '5%' }}>Sr.</th>
