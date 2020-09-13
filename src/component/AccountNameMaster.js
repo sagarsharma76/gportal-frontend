@@ -15,10 +15,11 @@ class AccountNameMaster extends React.Component {
         this.state = {
             searchTerm: '',
             searchResult: [],
-            activeAccount: { id: '', name: '', userName: '', password: '', remarks: '' },
+            activeAccount: {},
             isDisabled: true,
             isUpdateCall: false,
-            isSubmitted: false
+            isSubmitted: false,
+            error:false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -122,9 +123,13 @@ class AccountNameMaster extends React.Component {
     }
 
     validate() {
+        this.setState({ error:false})
         const activeAccount = this.state.activeAccount;
-        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '' || activeAccount.remarks === '') {
-            this.setState({ isSubmitted: true })
+        if (activeAccount.name === '' || activeAccount.companyId === '' || activeAccount.accountHolderMasterId === '' || activeAccount.statusId === '' || activeAccount.rate===''||activeAccount.baseAmount==='') {
+            this.setState({ isSubmitted: true , error:true})
+            return false;
+        }else if(activeAccount.rate.match(/^[+-]?\d+(\.\d+)?$/)===null || activeAccount.baseAmount.match(/^[+-]?\d+(\.\d+)?$/)===null){
+            this.setState({ isSubmitted: true , error:true})
             return false;
         }
         return true;
@@ -132,7 +137,7 @@ class AccountNameMaster extends React.Component {
 
     render() {
         const { loggingIn, companyMasterList, statusList, accountHolderMasterList } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted ,error} = this.state;
         const { name, companyId, accountHolderMasterId, statusId, rate, baseAmount } = activeAccount;
         const items = []
         const elements = this.state.searchResult;
@@ -213,7 +218,7 @@ class AccountNameMaster extends React.Component {
                                         <div >
                                             <label className="lbl-form" htmlFor="name">Name:</label>
                                             <input type="text" disabled={isDisabled} value={name} className="form-control" name="name" onChange={this.handleChange} />
-                                            {isSubmitted && !name &&
+                                            {isSubmitted && error && !name &&
                                                 <div className="help-block">Name is required</div>
                                             }
                                         </div>
@@ -224,7 +229,7 @@ class AccountNameMaster extends React.Component {
                                                     <option selected value=""></option>
                                                     {companyItems}
                                                 </select>
-                                                {isSubmitted && !companyId &&
+                                                {isSubmitted && error && !companyId &&
                                                     <div className="help-block">Company is required</div>
                                                 }
                                             </div>
@@ -235,7 +240,7 @@ class AccountNameMaster extends React.Component {
                                                     <option selected value=""></option>
                                                     {holderItems}
                                                 </select>
-                                                {isSubmitted && !accountHolderMasterId &&
+                                                {isSubmitted && error && !accountHolderMasterId &&
                                                     <div className="help-block">Holder is required</div>
                                                 }
                                             </div>
@@ -244,16 +249,16 @@ class AccountNameMaster extends React.Component {
                                             <div className="col-3" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-form" htmlFor="userName">Rate :</label>
                                                 <input type="text" disabled={isDisabled} value={rate} className="form-control" name="rate" onChange={this.handleChange} />
-                                                {isSubmitted && !rate &&
-                                                    <div className="help-block">Rate is required</div>
+                                                {isSubmitted && error &&
+                                                    <div className="help-block">Invalid Rate</div>
                                                 }
                                             </div>
 
                                             <div className="col-3" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
                                                 <label className="lbl-form" htmlFor="password">Base Amt. :</label>
                                                 <input type="text" disabled={isDisabled} value={baseAmount} className="form-control" name="baseAmount" onChange={this.handleChange} />
-                                                {isSubmitted && !baseAmount &&
-                                                    <div className="help-block">Base Amount is required</div>
+                                                {isSubmitted && error && 
+                                                    <div className="help-block">Invalid Base Amount</div>
                                                 }
                                             </div>
                                             <div className="col-6" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
@@ -262,7 +267,7 @@ class AccountNameMaster extends React.Component {
                                                     <option selected value=""></option>
                                                     {statusItems}
                                                 </select>
-                                                {isSubmitted && !statusId &&
+                                                {isSubmitted && !statusId && error &&
                                                     <div className="help-block">Status is required</div>
                                                 }
                                             </div>

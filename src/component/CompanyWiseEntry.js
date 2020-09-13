@@ -43,9 +43,15 @@ class CompanyWiseEntry extends React.Component {
     }
 
     saveCompanyAccountTransaction(index) {
+        const transaction = this.state.activeCompanyTransaction.transactions[index];
+        const result = transaction.balance.match(/^[+-]?\d+(\.\d+)?$/);
+        if(result==null){
+            alert("Invalid entry")
+            return;
+        }
         const { dispatch } = this.props;
         dispatch(actions.request());
-        const transaction = this.state.activeCompanyTransaction.transactions[index];
+        
         companyMasterService.saveCompanyAccountTransaction(transaction)
             .then(response => {
                 console.log(response)
@@ -97,23 +103,21 @@ class CompanyWiseEntry extends React.Component {
 
     handleChange(e, index) {
         const { name, value } = e.target;
-        if (true) {
-            const activeCompanyTransaction = { ...this.state.activeCompanyTransaction };
-            const transactions = activeCompanyTransaction.transactions;
-            transactions[index].balance = value;
-            const { rate, base, balance } = transactions[index];
-            let pointPnl = (balance - base)
-            let profitLoss = (pointPnl * rate)
-            transactions[index].pointPnl = pointPnl
-            transactions[index].profitLoss = profitLoss
-            let obalanceSum = 0;
-            let balanceSum = 0;
-            for (let tran of transactions) {
-                balanceSum = balanceSum + Number.parseFloat(tran.balance);
-            }
-
-            this.setState({ activeCompanyTransaction: activeCompanyTransaction, balanceSum: balanceSum });
+        const activeCompanyTransaction = { ...this.state.activeCompanyTransaction };
+        const transactions = activeCompanyTransaction.transactions;
+        transactions[index].balance = value;
+        const { rate, base, balance } = transactions[index];
+        let pointPnl = (balance - base)
+        let profitLoss = (pointPnl * rate)
+        transactions[index].pointPnl = pointPnl
+        transactions[index].profitLoss = profitLoss
+        let obalanceSum = 0;
+        let balanceSum = 0;
+        for (let tran of transactions) {
+            balanceSum = balanceSum + Number.parseFloat(tran.balance);
         }
+
+        this.setState({ activeCompanyTransaction: activeCompanyTransaction, balanceSum: balanceSum });
     }
 
     handleSearchChange(e) {

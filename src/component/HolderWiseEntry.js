@@ -41,9 +41,14 @@ class HolderWiseEntry extends React.Component {
     }
 
     saveAccountHolderTransaction(index) {
+        const transaction = this.state.activeAccountHolderTransaction.transactions[index];
+        const result = transaction.balance.match(/^[+-]?\d+(\.\d+)?$/);
+        if(result==null){
+            alert("Invalid entry")
+            return;
+        }
         const { dispatch } = this.props;
         dispatch(actions.request());
-        const transaction = this.state.activeAccountHolderTransaction.transactions[index];
         accountHolderMasterService.saveAccountHolderTransaction(transaction)
             .then(response => {
                 console.log(response)
