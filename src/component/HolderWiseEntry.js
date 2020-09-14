@@ -23,7 +23,8 @@ class HolderWiseEntry extends React.Component {
             activeAccountHolderTransaction: {},
             date: date,
             obalanceSum: 0,
-            balanceSum: 0
+            balanceSum: 0,
+            successMessage:false
         };
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -42,7 +43,7 @@ class HolderWiseEntry extends React.Component {
 
     saveAccountHolderTransaction(index) {
         const transaction = this.state.activeAccountHolderTransaction.transactions[index];
-        const result = transaction.balance.match(/^[+-]?\d+(\.\d+)?$/);
+        const result = transaction.balance.toString().match(/^[+-]?\d+(\.\d+)?$/);
         if(result==null){
             alert("Invalid entry")
             return;
@@ -52,6 +53,7 @@ class HolderWiseEntry extends React.Component {
         accountHolderMasterService.saveAccountHolderTransaction(transaction)
             .then(response => {
                 console.log(response)
+                this.showSuccessMessage()
             })
             .catch(error => {
                 alert("Failed to update Group Holder.\nError:" + error);
@@ -111,7 +113,7 @@ class HolderWiseEntry extends React.Component {
         transactions[index].profitLoss = profitLoss
         let balanceSum = 0;
         for (let tran of transactions) {
-            balanceSum = balanceSum + Number.parseFloat(tran.balance);
+            balanceSum = balanceSum + Number.parseFloat(tran.balance===''?0:tran.balance);
         }
 
         this.setState({ activeAccountHolderTransaction: activeAccountHolderTransaction, balanceSum: balanceSum });
@@ -133,6 +135,13 @@ class HolderWiseEntry extends React.Component {
                 console.log(response);
                 this.getAccountHolderTransactions(accountHolder.id)
             })
+    }
+
+    showSuccessMessage(){
+        this.setState({successMessage:true})
+        setTimeout(() => {
+            this.setState({successMessage:false})
+          }, 2000);
     }
 
     render() {
@@ -233,6 +242,7 @@ class HolderWiseEntry extends React.Component {
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
                                         </div>
+                                        <label className={this.state.successMessage?'success-message':'hidden'}>Transaction Saved Successfully</label>
                                     </Navbar>
                                 </div>
                                 <div className="inner-work-box row">

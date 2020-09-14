@@ -23,7 +23,8 @@ class CompanyWiseEntry extends React.Component {
             activeCompanyTransaction: {},
             date: date,
             obalanceSum: 0,
-            balanceSum: 0
+            balanceSum: 0,
+            successMessage:false
         };
 
         this.myRef = React.createRef();
@@ -44,20 +45,21 @@ class CompanyWiseEntry extends React.Component {
 
     saveCompanyAccountTransaction(index) {
         const transaction = this.state.activeCompanyTransaction.transactions[index];
-        const result = transaction.balance.match(/^[+-]?\d+(\.\d+)?$/);
-        if(result==null){
-            alert("Invalid entry")
+        const result = transaction.balance.toString().match(/^[+-]?\d+(\.\d+)?$/);
+        if (result == null) {
+            alert("Invalid entry\nPlease enter numeric values only.")
             return;
         }
         const { dispatch } = this.props;
         dispatch(actions.request());
-        
+
         companyMasterService.saveCompanyAccountTransaction(transaction)
             .then(response => {
                 console.log(response)
+                this.showSuccessMessage();
             })
             .catch(error => {
-                alert("Failed to update Group Holder.\nError:" + error);
+                alert("Failed to update Group Holder Transaction.\nError:" + error);
             })
     }
 
@@ -114,7 +116,7 @@ class CompanyWiseEntry extends React.Component {
         let obalanceSum = 0;
         let balanceSum = 0;
         for (let tran of transactions) {
-            balanceSum = balanceSum + Number.parseFloat(tran.balance);
+            balanceSum = balanceSum + Number.parseFloat(tran.balance === '' ? 0 : tran.balance);
         }
 
         this.setState({ activeCompanyTransaction: activeCompanyTransaction, balanceSum: balanceSum });
@@ -136,6 +138,13 @@ class CompanyWiseEntry extends React.Component {
                 console.log(response);
                 this.getCompanyTransactions(company)
             })
+    }
+
+    showSuccessMessage(){
+        this.setState({successMessage:true})
+        setTimeout(() => {
+            this.setState({successMessage:false})
+          }, 2000);
     }
 
 
@@ -236,6 +245,7 @@ class CompanyWiseEntry extends React.Component {
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
                                         </div>
+                                        <label className={this.state.successMessage?'success-message':'hidden'}>Transaction Saved Successfully</label>
                                     </Navbar>
                                 </div>
                                 <div className="inner-work-box row">

@@ -15,9 +15,11 @@ export function getAll() {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
+    }).catch(error => {
+        return Promise.reject(error);
     })
 }
 
@@ -35,9 +37,11 @@ export function save(accountHolderMaster) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
+    }).catch(error => {
+        return Promise.reject(error);
     })
 }
 
@@ -59,9 +63,11 @@ export function update(accountHolderMaster) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
+    }).catch(error => {
+        return Promise.reject(error);
     })
 }
 
@@ -79,9 +85,11 @@ export function deleteAccountHolderMaster(accountHolderMasterId) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
+    }).catch(error => {
+        return Promise.reject(error);
     })
 }
 
@@ -98,16 +106,15 @@ export function getAccountHolderTransactions(accountHolderId) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
+    }).catch(error => {
+        return Promise.reject(error);
     })
-        .catch(error => {
-            return Promise.reject(error);
-        })
 }
 
-export function saveAccountHolderTransaction(transaction){
+export function saveAccountHolderTransaction(transaction) {
     let apiEndpoint = '/anm/transactions/' + transaction.id;
     let headers = {
         // 'Access-Control-Allow-Origin': '*',
@@ -116,19 +123,18 @@ export function saveAccountHolderTransaction(transaction){
     }
 
     let body = {
-        'balance':transaction.balance
+        'balance': transaction.balance
     }
-    return http.putMethod(apiEndpoint,body,headers
+    return http.putMethod(apiEndpoint, body, headers
     ).then(response => {
         console.log(response);
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
-    })
-    .catch(error => {
+    }).catch(error => {
         return Promise.reject(error);
     })
 }
@@ -146,13 +152,12 @@ export function clearAccountHolderTransations(accountHolderId) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
+    }).catch(error => {
+        return Promise.reject(error);
     })
-        .catch(error => {
-            return Promise.reject(error);
-        })
 }
 
 

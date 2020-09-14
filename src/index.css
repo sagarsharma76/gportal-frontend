@@ -183,3 +183,14 @@ td{
   color:black;
   border: 2px groove !important;
 }
+
+.success-message{
+  margin-left: 1%;
+  color: white;
+  border-radius: 5%;
+  margin-bottom: 0px;
+}
+
+.hidden{
+  display: none;
+}

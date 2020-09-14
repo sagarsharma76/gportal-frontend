@@ -48,6 +48,8 @@ class AccountHolderMaster extends React.Component {
                         console.log(response)
                         this.getAccountHolderMasterList();
                         this.setState({ isDisabled: true, isUpdateCall: false })
+                    }).catch(error => {
+                        alert("Failed to update Account Holder.\nError : "+error);
                     })
             } else {
                 accountHolderMasterService.save(this.state.activeAccount)
@@ -55,6 +57,8 @@ class AccountHolderMaster extends React.Component {
                         console.log(response)
                         this.getAccountHolderMasterList();
                         this.setState({ isDisabled: true, activeAccount: response.data })
+                    }).catch(error => {
+                        alert("Failed to create Account Holder.\nError : "+error);
                     })
             }
         }
@@ -81,7 +85,7 @@ class AccountHolderMaster extends React.Component {
                 dispatch(actions.getHolderGroupMasterListSuccess(response.data));
             })
             .catch(error => {
-                alert("Failed to load Group Holder List.\nError:" + error)
+                alert("Failed to load Account Holder List.\nError:" + error)
             })
     }
 
@@ -130,10 +134,10 @@ class AccountHolderMaster extends React.Component {
 
     validate() {
         const activeAccount = this.state.activeAccount;
-        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '' || activeAccount.remarks === '') {
+        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '') {
             this.setState({ isSubmitted: true })
             return false;
-        }else if(activeAccount.mobileNumber.match(/^((\+){1}91){1}[1-9]{1}[0-9]{9}$/)===null){
+        }else if(activeAccount.mobileNumber != '' && activeAccount.mobileNumber.match(/^([9]{1})([234789]{1})([0-9]{8})$/)===null){
             alert("Invalid Mobile Number Entered")
             return false;
         }
@@ -227,9 +231,9 @@ class AccountHolderMaster extends React.Component {
                                             <div className="col-6" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-form" htmlFor="mobileNumber">Mobile Number :</label>
                                                 <input type="text" disabled={isDisabled} value={mobileNumber} className="form-control" name="mobileNumber" onChange={this.handleChange} />
-                                                {isSubmitted && !mobileNumber &&
+                                                {/* {isSubmitted && !mobileNumber &&
                                                     <div className="help-block">Mobile Number is required</div>
-                                                }
+                                                } */}
                                             </div>
 
                                             <div className="col-6" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
@@ -238,9 +242,9 @@ class AccountHolderMaster extends React.Component {
                                                     <option selected value=""></option>
                                                     {statusItems}
                                                 </select>
-                                                {isSubmitted && !statusId &&
+                                                {/* {isSubmitted && !statusId &&
                                                     <div className="help-block">Status is required</div>
-                                                }
+                                                } */}
                                             </div>
                                         </div>
                                         <div className="row">
@@ -266,16 +270,16 @@ class AccountHolderMaster extends React.Component {
                                                 <option selected value=""></option>
                                                 {groupItems}
                                             </select>
-                                            {isSubmitted && !holderGroupMasterId &&
+                                            {/* {isSubmitted && !holderGroupMasterId &&
                                                 <div className="help-block">Group is required</div>
-                                            }
+                                            } */}
                                         </div>
                                         <div>
                                             <label className="lbl-form" htmlFor="remakrs">Remarks :</label>
                                             <input type="text" disabled={isDisabled} value={remarks} className="form-control" name="remarks" onChange={this.handleChange} />
-                                            {isSubmitted && !remarks &&
+                                            {/* {isSubmitted && !remarks &&
                                                 <div className="help-block">Remarks are required</div>
-                                            }
+                                            } */}
                                         </div>
                                     </div>
                                 </div>

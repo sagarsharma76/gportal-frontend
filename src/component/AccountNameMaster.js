@@ -48,7 +48,7 @@ class AccountNameMaster extends React.Component {
                         this.setState({ isDisabled: true, isUpdateCall: false })
                     })
                     .catch(error => {
-                        alert("Failed to update Group Holder.\nError:" + error);
+                        alert("Failed to update Account Name.\nError : " + error);
                     })
             } else {
                 accountNameMasterService.save(this.state.activeAccount)
@@ -58,7 +58,7 @@ class AccountNameMaster extends React.Component {
                         this.setState({ isDisabled: true, activeAccount: response.data })
                     })
                     .catch(error => {
-                        alert("Failed to create Group Holder.\nError:" + error);
+                        alert("Failed to create Account Name.\nError : " + error);
                     })
             }
         }
@@ -125,14 +125,14 @@ class AccountNameMaster extends React.Component {
     validate() {
         this.setState({ error:false})
         const activeAccount = this.state.activeAccount;
-        if (activeAccount.name === '' || activeAccount.companyId === '' || activeAccount.accountHolderMasterId === '' || activeAccount.statusId === '' || activeAccount.rate===''||activeAccount.baseAmount==='') {
+        if (activeAccount.name === '') {
             this.setState({ isSubmitted: true , error:true})
             return false;
-        }else if(activeAccount.rate.match(/^[+-]?\d+(\.\d+)?$/)===null){
-            alert("Invalid Entry in Rate")
+        }else if(activeAccount.rate!='' && activeAccount.rate.match(/^[+-]?\d+(\.\d+)?$/)===null){
+            alert("Invalid Entry in Rate\nPlease Enter Numeric Values Only")
             return false;
-        }else if(activeAccount.baseAmount.match(/^[+-]?\d+(\.\d+)?$/)===null){
-            alert("Invalid Entry in Base Amount")
+        }else if(activeAccount.baseAmount!='' && activeAccount.baseAmount.match(/^[+-]?\d+(\.\d+)?$/)===null){
+            alert("Invalid Entry in Base Amount\nPlease Enter Numeric Values Only")
             return false;
         }
         return true;
@@ -232,9 +232,9 @@ class AccountNameMaster extends React.Component {
                                                     <option selected value=""></option>
                                                     {companyItems}
                                                 </select>
-                                                {isSubmitted && error && !companyId &&
+                                                {/* {isSubmitted && error && !companyId &&
                                                     <div className="help-block">Company is required</div>
-                                                }
+                                                } */}
                                             </div>
 
                                             <div className="col-6" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
@@ -243,26 +243,26 @@ class AccountNameMaster extends React.Component {
                                                     <option selected value=""></option>
                                                     {holderItems}
                                                 </select>
-                                                {isSubmitted && error && !accountHolderMasterId &&
+                                                {/* {isSubmitted && error && !accountHolderMasterId &&
                                                     <div className="help-block">Holder is required</div>
-                                                }
+                                                } */}
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="col-3" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-form" htmlFor="userName">Rate :</label>
                                                 <input type="text" disabled={isDisabled} value={rate} className="form-control" name="rate" onChange={this.handleChange} />
-                                                {isSubmitted && error && !rate &&
+                                                {/* {isSubmitted && error && !rate &&
                                                     <div className="help-block">Rate is required</div>
-                                                }
+                                                } */}
                                             </div>
 
                                             <div className="col-3" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
                                                 <label className="lbl-form" htmlFor="password">Base Amt. :</label>
                                                 <input type="text" disabled={isDisabled} value={baseAmount} className="form-control" name="baseAmount" onChange={this.handleChange} />
-                                                {isSubmitted && error && !baseAmount &&
+                                                {/* {isSubmitted && error && !baseAmount &&
                                                     <div className="help-block">Base Amount is required</div>
-                                                }
+                                                } */}
                                             </div>
                                             <div className="col-6" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
                                                 <label className="lbl-form" htmlFor="remakrs">Status:</label>
@@ -270,9 +270,9 @@ class AccountNameMaster extends React.Component {
                                                     <option selected value=""></option>
                                                     {statusItems}
                                                 </select>
-                                                {isSubmitted && !statusId && error &&
+                                                {/* {isSubmitted && !statusId && error &&
                                                     <div className="help-block">Status is required</div>
-                                                }
+                                                } */}
                                             </div>
                                         </div>
 

@@ -37,7 +37,7 @@ export function save(holderGroupMaster) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     }).catch(error => {

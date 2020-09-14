@@ -15,7 +15,7 @@ export function getAll() {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     }).catch(error => {
@@ -37,7 +37,7 @@ export function save(companyMaster) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     }).catch(error => {
@@ -61,7 +61,7 @@ export function update(companyMaster) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     }).catch(error => {
@@ -83,11 +83,10 @@ export function deleteCompanyMaster(companyMasterId) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
-    })
-    .catch(error => {
+    }).catch(error => {
         return Promise.reject(error);
     })
 }
@@ -105,7 +104,7 @@ export function getCompanyTransactions(companyId){
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     })
@@ -131,7 +130,7 @@ export function saveCompanyAccountTransaction(transaction){
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     })
@@ -153,7 +152,7 @@ export function clearCompanyTransations(companyId){
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     })

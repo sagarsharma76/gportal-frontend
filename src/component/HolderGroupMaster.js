@@ -47,7 +47,7 @@ class HolderGroupMaster extends React.Component {
                         this.setState({ isDisabled: true, isUpdateCall: false })
                     })
                     .catch(error => {
-                        alert("Failed to update Group Holder.\nError:"+error);
+                        alert("Failed to update Group Holder.\nError : "+error);
                     })
             } else {
                 holderGroupMasterService.save(this.state.activeAccount)
@@ -57,7 +57,7 @@ class HolderGroupMaster extends React.Component {
                         this.setState({ isDisabled: true,activeAccount:response.data})
                     })
                     .catch(error => {
-                        alert("Failed to create Group Holder.\nError:"+error);
+                        alert("Failed to create Group Holder.\nError : "+error);
                     })
             }
         }
@@ -123,7 +123,7 @@ class HolderGroupMaster extends React.Component {
 
     validate() {
         const activeAccount = this.state.activeAccount;
-        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '' || activeAccount.remarks === '') {
+        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '') {
             this.setState({ isSubmitted: true })
             return false;
         }
@@ -221,9 +221,9 @@ class HolderGroupMaster extends React.Component {
                                         <div>
                                             <label className="lbl-form" htmlFor="remakrs">Remarks:</label>
                                             <input type="text" disabled={isDisabled} value={remarks} className="form-control" name="remarks" onChange={this.handleChange} />
-                                            {isSubmitted && !remarks &&
+                                            {/* {isSubmitted && !remarks &&
                                                 <div className="help-block">Remarks are required</div>
-                                            }
+                                            } */}
                                         </div>
                                     </div>
                                 </div>

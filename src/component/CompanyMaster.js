@@ -47,7 +47,7 @@ class CompanyMaster extends React.Component {
                         this.setState({ isDisabled: true, isUpdateCall: false })
                     })
                     .catch(error => {
-                        alert("Failed to update Group Holder.\nError:"+error);
+                        alert("Failed to update Company.\nError : "+error);
                     })
             } else {
                 companyMasterService.save(this.state.activeAccount)
@@ -57,7 +57,7 @@ class CompanyMaster extends React.Component {
                         this.setState({ isDisabled: true,activeAccount:response.data})
                     })
                     .catch(error => {
-                        alert("Failed to create Group Holder.\nError:"+error);
+                        alert("Failed to create Company.\nError : "+error);
                     })
             }
         }
@@ -74,7 +74,7 @@ class CompanyMaster extends React.Component {
                 this.setState({ searchResult: companyMasterList, isSubmitted: false })
             })
             .catch(error=>{
-                alert("Failed to load Group Holder List.\nError:"+error)
+                alert("Failed to load Company List.\nError : "+error)
             })
     }
 
@@ -89,7 +89,7 @@ class CompanyMaster extends React.Component {
                     this.getCompanyMasterList();
                 })
                 .catch(error => {
-                    alert("Failed to delete Group Holder List.\nError:"+error)
+                    alert("Failed to delete Company.\nError : "+error)
                 })
         }
     }
@@ -124,11 +124,11 @@ class CompanyMaster extends React.Component {
 
     validate() {
         const activeAccount = this.state.activeAccount;
-        if (activeAccount.name === '' || activeAccount.baseRate === '' || activeAccount.remarks === '') {
+        if (activeAccount.name === '') {
             this.setState({ isSubmitted: true })
             return false;
-        }else if(activeAccount.baseRate.match(/^[+-]?\d+(\.\d+)?$/)===null){
-            alert("Invalid Entry in Base Rate")
+        }else if(activeAccount.baseRate!='' && activeAccount.baseRate.match(/^[+-]?\d+(\.\d+)?$/)===null){
+            alert("Invalid Entry in Base Rate\nPlease Enter Numeric Values Only")
             return false;
         }
         return true;
@@ -209,17 +209,17 @@ class CompanyMaster extends React.Component {
                                             <div className="col-6" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-form" htmlFor="userName">Base Rate :</label>
                                                 <input type="text" disabled={isDisabled} value={baseRate} className="form-control" name="baseRate" onChange={this.handleChange} />
-                                                {isSubmitted && !baseRate &&
+                                                {/* {isSubmitted && !baseRate &&
                                                     <div className="help-block">Base rate is required</div>
-                                                }
+                                                } */}
                                             </div>
                                         </div>
                                         <div>
                                             <label className="lbl-form" htmlFor="remakrs">Remarks :</label>
                                             <input type="text" disabled={isDisabled} value={remarks} className="form-control" name="remarks" onChange={this.handleChange} />
-                                            {isSubmitted && !remarks &&
+                                            {/* {isSubmitted && !remarks &&
                                                 <div className="help-block">Remarks are required</div>
-                                            }
+                                            } */}
                                         </div>
                                     </div>
                                 </div>
