@@ -127,7 +127,7 @@ class CompanyMaster extends React.Component {
         if (activeAccount.name === '') {
             this.setState({ isSubmitted: true })
             return false;
-        }else if(activeAccount.baseRate!='' && activeAccount.baseRate.match(/^[+-]?\d+(\.\d+)?$/)===null){
+        }else if(activeAccount.baseRate!=null && activeAccount.baseRate!='' && activeAccount.baseRate.toString().match(/^[+-]?\d+(\.\d+)?$/)===null){
             alert("Invalid Entry in Base Rate\nPlease Enter Numeric Values Only")
             return false;
         }

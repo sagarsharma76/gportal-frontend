@@ -47,7 +47,7 @@ class CompanyWiseEntry extends React.Component {
         const transaction = this.state.activeCompanyTransaction.transactions[index];
         const result = transaction.balance.toString().match(/^[+-]?\d+(\.\d+)?$/);
         if (result == null) {
-            alert("Invalid entry\nPlease enter numeric values only.")
+            alert("Invalid entry.\nPlease enter numeric values only.")
             return;
         }
         const { dispatch } = this.props;
@@ -59,7 +59,7 @@ class CompanyWiseEntry extends React.Component {
                 this.showSuccessMessage();
             })
             .catch(error => {
-                alert("Failed to update Group Holder Transaction.\nError:" + error);
+                alert("Failed to update Group Holder Transaction.\nError : " + error);
             })
     }
 

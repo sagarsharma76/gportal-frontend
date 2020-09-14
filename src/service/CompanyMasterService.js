@@ -24,7 +24,6 @@ export function getAll() {
 }
 
 export function save(companyMaster) {
-    // let apiEndpoint = '/employees'
     let apiEndpoint = '/company/master'
     let headers = {
         // 'Access-Control-Allow-Origin': '*',

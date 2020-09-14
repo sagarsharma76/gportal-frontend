@@ -99,6 +99,8 @@ class AccountHolderMaster extends React.Component {
                     console.log(response)
                     this.setState({ activeAccount: { id: '', name: '', userName: '', password: '', remarks: '', mobileNumber: '', holderGroupMasterId: '', statusId: '' } })
                     this.getAccountHolderMasterList();
+                }).catch(error => {
+                    alert("Failed to delete Account Holder.\nError : " + error)
                 })
         }
     }
@@ -137,7 +139,7 @@ class AccountHolderMaster extends React.Component {
         if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '') {
             this.setState({ isSubmitted: true })
             return false;
-        }else if(activeAccount.mobileNumber != '' && activeAccount.mobileNumber.match(/^([9]{1})([234789]{1})([0-9]{8})$/)===null){
+        }else if(activeAccount.mobileNumber != null && activeAccount.mobileNumber != '' && activeAccount.mobileNumber.toString().match(/^([9]{1})([234789]{1})([0-9]{8})$/)===null){
             alert("Invalid Mobile Number Entered")
             return false;
         }

@@ -15,7 +15,7 @@ export function getAll() {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     }).catch(error => {
@@ -61,7 +61,7 @@ export function update(holderGroupMaster) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     }).catch(error => {
@@ -83,7 +83,7 @@ export function deleteHolderGroupMaster(holderGroupMasterId) {
         if (response.success === true) {
             return response
         } else {
-            const error = (response && response.errors && response.errors.errorMessage) || 'API Call Failed';
+            const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
         }
     })

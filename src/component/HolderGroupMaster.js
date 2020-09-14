@@ -88,7 +88,7 @@ class HolderGroupMaster extends React.Component {
                     this.getHolderGroupMasterList();
                 })
                 .catch(error => {
-                    alert("Failed to delete Group Holder List.\nError:"+error)
+                    alert("Failed to delete Group Holder.\nError : "+error)
                 })
         }
     }

@@ -128,10 +128,10 @@ class AccountNameMaster extends React.Component {
         if (activeAccount.name === '') {
             this.setState({ isSubmitted: true , error:true})
             return false;
-        }else if(activeAccount.rate!='' && activeAccount.rate.match(/^[+-]?\d+(\.\d+)?$/)===null){
+        }else if(activeAccount.rate!= null && activeAccount.rate!='' && activeAccount.rate.toString().match(/^[+-]?\d+(\.\d+)?$/)===null){
             alert("Invalid Entry in Rate\nPlease Enter Numeric Values Only")
             return false;
-        }else if(activeAccount.baseAmount!='' && activeAccount.baseAmount.match(/^[+-]?\d+(\.\d+)?$/)===null){
+        }else if(activeAccount.baseAmount!=null && activeAccount.baseAmount!='' && activeAccount.baseAmount.toString().match(/^[+-]?\d+(\.\d+)?$/)===null){
             alert("Invalid Entry in Base Amount\nPlease Enter Numeric Values Only")
             return false;
         }

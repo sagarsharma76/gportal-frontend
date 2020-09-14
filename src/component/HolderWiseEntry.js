@@ -45,7 +45,7 @@ class HolderWiseEntry extends React.Component {
         const transaction = this.state.activeAccountHolderTransaction.transactions[index];
         const result = transaction.balance.toString().match(/^[+-]?\d+(\.\d+)?$/);
         if(result==null){
-            alert("Invalid entry")
+            alert("Invalid entry.\nPlease enter numeric values only.")
             return;
         }
         const { dispatch } = this.props;
