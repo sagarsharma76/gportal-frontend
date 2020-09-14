@@ -15,7 +15,7 @@ class CompanyMaster extends React.Component {
         this.state = {
             searchTerm: '',
             searchResult: [],
-            activeAccount: { id: '', name: '', userName: '', password: '', remarks: '' },
+            activeAccount: {},
             isDisabled: true,
             isUpdateCall: false,
             isSubmitted: false
@@ -124,8 +124,11 @@ class CompanyMaster extends React.Component {
 
     validate() {
         const activeAccount = this.state.activeAccount;
-        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '' || activeAccount.remarks === '') {
+        if (activeAccount.name === '' || activeAccount.baseRate === '' || activeAccount.remarks === '') {
             this.setState({ isSubmitted: true })
+            return false;
+        }else if(activeAccount.baseRate.match(/^[+-]?\d+(\.\d+)?$/)===null){
+            alert("Invalid Entry in Base Rate")
             return false;
         }
         return true;

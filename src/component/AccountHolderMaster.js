@@ -133,6 +133,9 @@ class AccountHolderMaster extends React.Component {
         if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '' || activeAccount.remarks === '') {
             this.setState({ isSubmitted: true })
             return false;
+        }else if(activeAccount.mobileNumber.match(/^((\+){1}91){1}[1-9]{1}[0-9]{9}$/)===null){
+            alert("Invalid Mobile Number Entered")
+            return false;
         }
         return true;
     }

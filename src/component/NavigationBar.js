@@ -25,8 +25,8 @@ class NavigationBar extends React.Component {
     render() {
         return (
             <div>
-                <Navbar bg="dark" variant="dark" expand="lg">
-                    <Navbar.Brand href="" onClick={()=>history.push('/')}>G-Portal</Navbar.Brand>
+                <Navbar className="navbar navbar-dark bg-dark" expand="lg">
+                    <Navbar.Brand style={{"color":"#ffffff"}} href="" onClick={()=>history.push('/')}>G-Portal</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
@@ -44,6 +44,7 @@ class NavigationBar extends React.Component {
                             <NavDropdown
                                 title="Transactions"
                                 id="transactions-dropdown"
+                                className="navbar-dropdown"
                                 onMouseEnter={(e) => document.getElementById("transactions-dropdown").click()}
                                 onMouseLeave={(e) => document.getElementById("transactions-dropdown").click()}
                             >
@@ -54,6 +55,7 @@ class NavigationBar extends React.Component {
                             <NavDropdown
                                 title={<Icon.Person />}
                                 id="person-dropdown"
+                                className="navbar-dropdown"
                                 onMouseEnter={(e) => document.getElementById("person-dropdown").click()}
                                 onMouseLeave={(e) => document.getElementById("person-dropdown").click()}
                             >

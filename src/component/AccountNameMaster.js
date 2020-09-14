@@ -128,8 +128,11 @@ class AccountNameMaster extends React.Component {
         if (activeAccount.name === '' || activeAccount.companyId === '' || activeAccount.accountHolderMasterId === '' || activeAccount.statusId === '' || activeAccount.rate===''||activeAccount.baseAmount==='') {
             this.setState({ isSubmitted: true , error:true})
             return false;
-        }else if(activeAccount.rate.match(/^[+-]?\d+(\.\d+)?$/)===null || activeAccount.baseAmount.match(/^[+-]?\d+(\.\d+)?$/)===null){
-            this.setState({ isSubmitted: true , error:true})
+        }else if(activeAccount.rate.match(/^[+-]?\d+(\.\d+)?$/)===null){
+            alert("Invalid Entry in Rate")
+            return false;
+        }else if(activeAccount.baseAmount.match(/^[+-]?\d+(\.\d+)?$/)===null){
+            alert("Invalid Entry in Base Amount")
             return false;
         }
         return true;
@@ -249,16 +252,16 @@ class AccountNameMaster extends React.Component {
                                             <div className="col-3" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-form" htmlFor="userName">Rate :</label>
                                                 <input type="text" disabled={isDisabled} value={rate} className="form-control" name="rate" onChange={this.handleChange} />
-                                                {isSubmitted && error &&
-                                                    <div className="help-block">Invalid Rate</div>
+                                                {isSubmitted && error && !rate &&
+                                                    <div className="help-block">Rate is required</div>
                                                 }
                                             </div>
 
                                             <div className="col-3" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
                                                 <label className="lbl-form" htmlFor="password">Base Amt. :</label>
                                                 <input type="text" disabled={isDisabled} value={baseAmount} className="form-control" name="baseAmount" onChange={this.handleChange} />
-                                                {isSubmitted && error && 
-                                                    <div className="help-block">Invalid Base Amount</div>
+                                                {isSubmitted && error && !baseAmount &&
+                                                    <div className="help-block">Base Amount is required</div>
                                                 }
                                             </div>
                                             <div className="col-6" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
