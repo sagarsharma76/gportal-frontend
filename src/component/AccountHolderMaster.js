@@ -23,7 +23,6 @@ class AccountHolderMaster extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.clearForm = this.clearForm.bind(this);
         this.saveOrUpdateAccountHolderMaster = this.saveOrUpdateAccountHolderMaster.bind(this);
@@ -109,16 +108,6 @@ class AccountHolderMaster extends React.Component {
         const { name, value } = e.target;
         console.log(name, value)
         this.setState({ activeAccount: { ...this.state.activeAccount, [name]: value } });
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        this.setState({ submitted: true });
-        const { username, password } = this.state;
-        const { dispatch } = this.props;
-        if (username && password) {
-            dispatch(actions.login(username, password));
-        }
     }
 
     handleSearchChange(e) {

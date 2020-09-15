@@ -2,6 +2,7 @@ import React from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons';
 import { history } from '../helpers/history';
+import * as loginService from "../service/LoginService";
 
 class NavigationBar extends React.Component {
    
@@ -20,6 +21,17 @@ class NavigationBar extends React.Component {
 
     handleClose = () => {
         this.setState({ isOpen: false })
+    }
+
+    logout() {
+        // loginService.logout()
+        // .then(response=>{
+        //     console.log(response)
+        // }).catch(error => {
+        //     console.log(error)
+        // })
+        localStorage.removeItem('token');
+        history.push('/login');
     }
 
     render() {
@@ -59,7 +71,7 @@ class NavigationBar extends React.Component {
                                 onMouseEnter={(e) => document.getElementById("person-dropdown").click()}
                                 onMouseLeave={(e) => document.getElementById("person-dropdown").click()}
                             >
-                                <NavDropdown.Item href="">Logout</NavDropdown.Item>
+                                <NavDropdown.Item href="" onClick={()=>this.logout()}>Logout</NavDropdown.Item>
                             </NavDropdown>
                             
                         </Nav>

@@ -1,6 +1,5 @@
 import * as ActionTypes from "./action-types";
-import * as loginService from "../service/LoginService";
-import { history } from '../helpers/history';
+
 
 export function request(user) { return { type: ActionTypes.LOGIN_REQUEST, user } }
 export function success(user) { return { type: ActionTypes.LOGIN_SUCCESS, user } }
@@ -35,29 +34,4 @@ export function getAccountNameMasterListSuccess(list){
 }
 export function getAccountNameMasterListFailure(error) { 
     return { type: ActionTypes.GET_ACCOUNT_NAME_MASTER_LIST_FAILURE, error } 
-}
-
-
-export function login(username, password) {
-    return dispatch => {
-        dispatch(request({ username }));
-
-        loginService.login(username, password)
-            .then(
-                response => {
-                    dispatch(success(response));
-                    const token = (response && response.data && response.data.token) || "";
-                    localStorage.setItem('token', token);
-                    history.push('/');
-                },
-                error => {
-                    dispatch(failure(error));
-                }
-            );
-    };
-}
-
-export function logout() {
-    loginService.logout();
-    return { type: ActionTypes.LOGOUT };
 }

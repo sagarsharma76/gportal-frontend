@@ -11,11 +11,7 @@ class HomePage extends React.Component {
     constructor(props) {
         super(props);
 
-        // reset login status
-        this.props.dispatch(actions.logout());
-
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount(){
@@ -70,17 +66,6 @@ class HomePage extends React.Component {
     handleChange(e) {
         const { name, value } = e.target;
         this.setState({ [name]: value });
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-
-        this.setState({ submitted: true });
-        const { username, password } = this.state;
-        const { dispatch } = this.props;
-        if (username && password) {
-            dispatch(actions.login(username, password));
-        }
     }
 
     render() {

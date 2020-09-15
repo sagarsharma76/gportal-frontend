@@ -22,7 +22,6 @@ class CompanyMaster extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.clearForm = this.clearForm.bind(this);
         this.saveOrUpdatecompanyMaster = this.saveOrUpdatecompanyMaster.bind(this);
@@ -97,16 +96,6 @@ class CompanyMaster extends React.Component {
     handleChange(e) {
         const { name, value } = e.target;
         this.setState({ activeAccount: { ...this.state.activeAccount, [name]: value } });
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        this.setState({ submitted: true });
-        const { username, password } = this.state;
-        const { dispatch } = this.props;
-        if (username && password) {
-            dispatch(actions.login(username, password));
-        }
     }
 
     handleSearchChange(e) {
