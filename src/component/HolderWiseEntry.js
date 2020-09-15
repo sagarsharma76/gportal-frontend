@@ -68,7 +68,7 @@ class HolderWiseEntry extends React.Component {
                 console.log(response)
                 dispatch(actions.getAccountHolderMasterListSuccess(response.data));
                 const { accountHolderMasterList } = this.props;
-                if (accountHolderMasterList != []) {
+                if (accountHolderMasterList != [] && accountHolderMasterList.length > 0) {
                     this.setState({ searchResult: accountHolderMasterList, isSubmitted: false, activeAccount: accountHolderMasterList[0] })
                     this.getAccountHolderTransactions(accountHolderMasterList[0]);
                 }
@@ -147,7 +147,7 @@ class HolderWiseEntry extends React.Component {
     render() {
         const { loggingIn } = this.props;
         const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeAccountHolderTransaction, obalanceSum, balanceSum } = this.state;
-        const { name, baseRate, remarks } = activeAccount;
+        const { name, baseRate, remarks } = activeAccount || '';
         const { lastSaved } = activeAccountHolderTransaction;
         const items = []
         const elements = this.state.searchResult;

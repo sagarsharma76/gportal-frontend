@@ -13,7 +13,7 @@ export function getAll() {
     ).then(response => {
         console.log(response);
         if (response.success === true) {
-            return response
+            return response 
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);

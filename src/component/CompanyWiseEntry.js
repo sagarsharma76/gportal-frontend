@@ -72,13 +72,13 @@ class CompanyWiseEntry extends React.Component {
                 const { companyMasterList } = this.props;
                 console.log(companyMasterList)
                 this.setState({ searchResult: companyMasterList, isSubmitted: false, activeAccount: companyMasterList[0] })
-                if (companyMasterList != []) {
+                if (companyMasterList != [] && companyMasterList.length>0) {
                     this.getCompanyTransactions(companyMasterList[0]);
                 }
 
             })
             .catch(error => {
-                alert("Failed to load Group Holder List.\nError:" + error)
+                alert("Failed to load Company List.\nError:" + error)
             })
     }
 
@@ -150,7 +150,7 @@ class CompanyWiseEntry extends React.Component {
 
     render() {
         const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum } = this.state;
-        const { name, baseRate, remarks } = activeAccount;
+        const { name, baseRate, remarks } = activeAccount || '';
         const { lastSaved } = activeCompanyTransaction;
         const items = []
         const elements = this.state.searchResult;
