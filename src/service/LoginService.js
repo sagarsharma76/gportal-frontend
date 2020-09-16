@@ -1,4 +1,3 @@
-import { authHeader } from '../helpers/auth-header';
 import * as http from '../helpers/http-call';
 
 export function login(userName, password) {
@@ -46,8 +45,6 @@ export function logout() {
         return Promise.reject(error);
     })
 }
-
-
 
 export function getStatusList() {
     // let apiEndpoint = '/employees'

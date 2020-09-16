@@ -4,7 +4,7 @@ import { Navbar, FormControl, Button } from 'react-bootstrap'
 import NavigationBar from './NavigationBar'
 import * as Icon from 'react-bootstrap-icons';
 import * as companyMasterService from "../service/CompanyMasterService";
-import {history} from './../helpers/history';
+import { history } from './../helpers/history';
 
 import * as actions from '../state/actions';
 
@@ -15,10 +15,11 @@ class CompanyMaster extends React.Component {
         this.state = {
             searchTerm: '',
             searchResult: [],
-            activeAccount: {},
+            activeAccount: { id: '', name: '', baseRate: '', remarks: '' },
             isDisabled: true,
             isUpdateCall: false,
-            isSubmitted: false
+            isSubmitted: false,
+            isLogout: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -46,17 +47,17 @@ class CompanyMaster extends React.Component {
                         this.setState({ isDisabled: true, isUpdateCall: false })
                     })
                     .catch(error => {
-                        alert("Failed to update Company.\nError : "+error);
+                        alert("Failed to update Company.\nError : " + error);
                     })
             } else {
                 companyMasterService.save(this.state.activeAccount)
                     .then(response => {
                         console.log(response)
                         this.getCompanyMasterList();
-                        this.setState({ isDisabled: true,activeAccount:response.data})
+                        this.setState({ isDisabled: true, activeAccount: response.data })
                     })
                     .catch(error => {
-                        alert("Failed to create Company.\nError : "+error);
+                        alert("Failed to create Company.\nError : " + error);
                     })
             }
         }
@@ -72,8 +73,13 @@ class CompanyMaster extends React.Component {
                 console.log(companyMasterList)
                 this.setState({ searchResult: companyMasterList, isSubmitted: false })
             })
-            .catch(error=>{
-                alert("Failed to load Company List.\nError : "+error)
+            .catch(error => {
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load Company List.\nError : " + error)
+                }
             })
     }
 
@@ -84,11 +90,11 @@ class CompanyMaster extends React.Component {
             companyMasterService.deleteCompanyMaster(this.state.activeAccount.id)
                 .then(response => {
                     console.log(response)
-                    this.setState({activeAccount: { id: '', name: '', baseRate: '', remarks: '' }});
+                    this.setState({ activeAccount: { id: '', name: '', baseRate: '', remarks: '' } });
                     this.getCompanyMasterList();
                 })
                 .catch(error => {
-                    alert("Failed to delete Company.\nError : "+error)
+                    alert("Failed to delete Company.\nError : " + error)
                 })
         }
     }
@@ -101,7 +107,7 @@ class CompanyMaster extends React.Component {
     handleSearchChange(e) {
         const { name, value } = e.target;
         this.setState({ [name]: value });
-        let result = this.props.CompanyMasterList;
+        let result = this.props.companyMasterList;
         result = result.filter(item => item.name.toLowerCase().includes(value.toLowerCase()))
         this.setState({ searchResult: result })
     }
@@ -116,7 +122,7 @@ class CompanyMaster extends React.Component {
         if (activeAccount.name === '') {
             this.setState({ isSubmitted: true })
             return false;
-        }else if(activeAccount.baseRate!=null && activeAccount.baseRate!='' && activeAccount.baseRate.toString().match(/^[+-]?\d+(\.\d+)?$/)===null){
+        } else if (activeAccount.baseRate != null && activeAccount.baseRate != '' && activeAccount.baseRate.toString().match(/^[+-]?\d+(\.\d+)?$/) === null) {
             alert("Invalid Entry in Base Rate\nPlease Enter Numeric Values Only")
             return false;
         }
@@ -125,7 +131,7 @@ class CompanyMaster extends React.Component {
 
     render() {
         const { loggingIn } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, isLogout } = this.state;
         const { name, baseRate, remarks } = activeAccount;
         const items = []
         const elements = this.state.searchResult;
@@ -136,7 +142,7 @@ class CompanyMaster extends React.Component {
 
         return (
             <div>
-                <NavigationBar />
+                <NavigationBar isLogout={isLogout} />
                 <div className="outer-panel">
                     <div className="row" >
                         <div className="outer-search-panel col-sm-3">
@@ -168,10 +174,10 @@ class CompanyMaster extends React.Component {
                                                 onClick={() => this.setState({ isDisabled: false, isUpdateCall: true })}><Icon.Check />Modify</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="danger" onClick={this.deleteCompanyMaster}><Icon.Trash />Delete</Button>
+                                            <Button variant="danger" disabled={activeAccount.id===''?true:false} onClick={this.deleteCompanyMaster}><Icon.Trash />Delete</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="warning" onClick={()=>history.push('/')}><Icon.X />Close</Button>
+                                            <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
                                         </div>
                                     </Navbar>
                                 </div>

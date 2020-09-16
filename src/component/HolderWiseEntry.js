@@ -24,7 +24,8 @@ class HolderWiseEntry extends React.Component {
             date: date,
             obalanceSum: 0,
             balanceSum: 0,
-            successMessage:false
+            successMessage: false,
+            isLogout: false
         };
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -44,7 +45,7 @@ class HolderWiseEntry extends React.Component {
     saveAccountHolderTransaction(index) {
         const transaction = this.state.activeAccountHolderTransaction.transactions[index];
         const result = transaction.balance.toString().match(/^[+-]?\d+(\.\d+)?$/);
-        if(result==null){
+        if (result == null) {
             alert("Invalid entry.\nPlease enter numeric values only.")
             return;
         }
@@ -56,7 +57,12 @@ class HolderWiseEntry extends React.Component {
                 this.showSuccessMessage()
             })
             .catch(error => {
-                alert("Failed to update Group Holder.\nError:" + error);
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to update Group Holder.\nError:" + error);
+                }
             })
     }
 
@@ -73,7 +79,12 @@ class HolderWiseEntry extends React.Component {
                     this.getAccountHolderTransactions(accountHolderMasterList[0]);
                 }
             }).catch(error => {
-                alert("Failed to load account Holder List.\nError:" + error)
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load account Holder List.\nError:" + error)
+                }
             })
     }
 
@@ -97,7 +108,12 @@ class HolderWiseEntry extends React.Component {
 
                 this.setState({ activeAccountHolderTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: accountHolder });
             }).catch(error => {
-                alert("Failed to load account Holder transactions.\nError:" + error)
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load account Holder transactions.\nError:" + error)
+                }
             })
     }
 
@@ -113,7 +129,7 @@ class HolderWiseEntry extends React.Component {
         transactions[index].profitLoss = profitLoss
         let balanceSum = 0;
         for (let tran of transactions) {
-            balanceSum = balanceSum + Number.parseFloat(tran.balance===''?0:tran.balance);
+            balanceSum = balanceSum + Number.parseFloat(tran.balance === '' ? 0 : tran.balance);
         }
 
         this.setState({ activeAccountHolderTransaction: activeAccountHolderTransaction, balanceSum: balanceSum });
@@ -137,16 +153,16 @@ class HolderWiseEntry extends React.Component {
             })
     }
 
-    showSuccessMessage(){
-        this.setState({successMessage:true})
+    showSuccessMessage() {
+        this.setState({ successMessage: true })
         setTimeout(() => {
-            this.setState({successMessage:false})
-          }, 2000);
+            this.setState({ successMessage: false })
+        }, 2000);
     }
 
     render() {
         const { loggingIn } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeAccountHolderTransaction, obalanceSum, balanceSum } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeAccountHolderTransaction, obalanceSum, balanceSum, isLogout } = this.state;
         const { name, baseRate, remarks } = activeAccount || '';
         const { lastSaved } = activeAccountHolderTransaction;
         const items = []
@@ -192,7 +208,7 @@ class HolderWiseEntry extends React.Component {
 
         return (
             <div>
-                <NavigationBar />
+                <NavigationBar isLogout={isLogout} />
                 <div className="outer-panel">
                     <div className="row" >
                         <div className="outer-search-panel col-sm-3">
@@ -242,7 +258,7 @@ class HolderWiseEntry extends React.Component {
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
                                         </div>
-                                        <label className={this.state.successMessage?'success-message':'hidden'}>Transaction Saved Successfully</label>
+                                        <label className={this.state.successMessage ? 'success-message' : 'hidden'}>Transaction Saved Successfully</label>
                                     </Navbar>
                                 </div>
                                 <div className="inner-work-box row">

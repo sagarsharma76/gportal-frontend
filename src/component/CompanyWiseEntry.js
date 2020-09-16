@@ -24,7 +24,8 @@ class CompanyWiseEntry extends React.Component {
             date: date,
             obalanceSum: 0,
             balanceSum: 0,
-            successMessage:false
+            successMessage: false,
+            isLogout: false
         };
 
         this.myRef = React.createRef();
@@ -59,7 +60,12 @@ class CompanyWiseEntry extends React.Component {
                 this.showSuccessMessage();
             })
             .catch(error => {
-                alert("Failed to update Group Holder Transaction.\nError : " + error);
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to update Group Holder Transaction.\nError : " + error);
+                }
             })
     }
 
@@ -72,13 +78,18 @@ class CompanyWiseEntry extends React.Component {
                 const { companyMasterList } = this.props;
                 console.log(companyMasterList)
                 this.setState({ searchResult: companyMasterList, isSubmitted: false, activeAccount: companyMasterList[0] })
-                if (companyMasterList != [] && companyMasterList.length>0) {
+                if (companyMasterList != [] && companyMasterList.length > 0) {
                     this.getCompanyTransactions(companyMasterList[0]);
                 }
 
             })
             .catch(error => {
-                alert("Failed to load Company List.\nError:" + error)
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load Company List.\nError:" + error)
+                }
             })
     }
 
@@ -140,16 +151,16 @@ class CompanyWiseEntry extends React.Component {
             })
     }
 
-    showSuccessMessage(){
-        this.setState({successMessage:true})
+    showSuccessMessage() {
+        this.setState({ successMessage: true })
         setTimeout(() => {
-            this.setState({successMessage:false})
-          }, 2000);
+            this.setState({ successMessage: false })
+        }, 2000);
     }
 
 
     render() {
-        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum, isLogout } = this.state;
         const { name, baseRate, remarks } = activeAccount || '';
         const { lastSaved } = activeCompanyTransaction;
         const items = []
@@ -195,7 +206,7 @@ class CompanyWiseEntry extends React.Component {
 
         return (
             <div>
-                <NavigationBar />
+                <NavigationBar isLogout={isLogout} />
                 <div className="outer-panel">
                     <div className="row" >
                         <div className="outer-search-panel col-sm-3">
@@ -245,7 +256,7 @@ class CompanyWiseEntry extends React.Component {
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
                                         </div>
-                                        <label className={this.state.successMessage?'success-message':'hidden'}>Transaction Saved Successfully</label>
+                                        <label className={this.state.successMessage ? 'success-message' : 'hidden'}>Transaction Saved Successfully</label>
                                     </Navbar>
                                 </div>
                                 <div className="inner-work-box row">

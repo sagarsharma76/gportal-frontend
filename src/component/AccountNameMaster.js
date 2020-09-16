@@ -15,11 +15,12 @@ class AccountNameMaster extends React.Component {
         this.state = {
             searchTerm: '',
             searchResult: [],
-            activeAccount: {},
+            activeAccount: {id: '', name: '', companyId: '', accountHolderMasterId: '', statusId: '', rate: '', baseAmount: ''},
             isDisabled: true,
             isUpdateCall: false,
             isSubmitted: false,
-            error:false
+            error: false,
+            isLogout: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -47,7 +48,12 @@ class AccountNameMaster extends React.Component {
                         this.setState({ isDisabled: true, isUpdateCall: false })
                     })
                     .catch(error => {
-                        alert("Failed to update Account Name.\nError : " + error);
+                        if (error === 401) {
+                            alert("Session Expired !!\nPlease login.")
+                            this.setState({ isLogout: true })
+                        } else {
+                            alert("Failed to update Account Name.\nError : " + error);
+                        }
                     })
             } else {
                 accountNameMasterService.save(this.state.activeAccount)
@@ -57,7 +63,12 @@ class AccountNameMaster extends React.Component {
                         this.setState({ isDisabled: true, activeAccount: response.data })
                     })
                     .catch(error => {
-                        alert("Failed to create Account Name.\nError : " + error);
+                        if (error === 401) {
+                            alert("Session Expired !!\nPlease login.")
+                            this.setState({ isLogout: true })
+                        } else {
+                            alert("Failed to create Account Name.\nError : " + error);
+                        }
                     })
             }
         }
@@ -73,7 +84,12 @@ class AccountNameMaster extends React.Component {
                 this.setState({ searchResult: accountNameMasterList, isSubmitted: false })
             })
             .catch(error => {
-                alert("Failed to load Group Holder List.\nError:" + error)
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load Group Holder List.\nError:" + error)
+                }
             })
     }
 
@@ -84,11 +100,16 @@ class AccountNameMaster extends React.Component {
             accountNameMasterService.deleteAccountNameMaster(this.state.activeAccount.id)
                 .then(response => {
                     console.log(response)
-                    this.setState({ activeAccount: { id: '', name: '', companyId: '', accountHolderMasterId: '', statusId: '' , rate:'', baseAmount:''} });
+                    this.setState({ activeAccount: { id: '', name: '', companyId: '', accountHolderMasterId: '', statusId: '', rate: '', baseAmount: '' } });
                     this.getAccountNameMasterList();
                 })
                 .catch(error => {
-                    alert("Failed to delete Group Holder List.\nError:" + error)
+                    if (error === 401) {
+                        alert("Session Expired !!\nPlease login.")
+                        this.setState({ isLogout: true })
+                    } else {
+                        alert("Failed to delete Group Holder List.\nError:" + error)
+                    }
                 })
         }
     }
@@ -101,26 +122,26 @@ class AccountNameMaster extends React.Component {
     handleSearchChange(e) {
         const { name, value } = e.target;
         this.setState({ [name]: value });
-        let result = this.props.AccountNameMasterList;
+        let result = this.props.accountNameMasterList;
         result = result.filter(item => item.name.toLowerCase().includes(value.toLowerCase()))
         this.setState({ searchResult: result })
     }
 
     clearForm() {
         const isDisabled = this.state.isDisabled;
-        this.setState({ isDisabled: !isDisabled, isSubmitted: false, activeAccount: { id: '', name: '', companyId: '', accountHolderMasterId: '', statusId: '' , rate:'', baseAmount:''} });
+        this.setState({ isDisabled: !isDisabled, isSubmitted: false, activeAccount: { id: '', name: '', companyId: '', accountHolderMasterId: '', statusId: '', rate: '', baseAmount: '' } });
     }
 
     validate() {
-        this.setState({ error:false})
+        this.setState({ error: false })
         const activeAccount = this.state.activeAccount;
         if (activeAccount.name === '') {
-            this.setState({ isSubmitted: true , error:true})
+            this.setState({ isSubmitted: true, error: true })
             return false;
-        }else if(activeAccount.rate!= null && activeAccount.rate!='' && activeAccount.rate.toString().match(/^[+-]?\d+(\.\d+)?$/)===null){
+        } else if (activeAccount.rate != null && activeAccount.rate != '' && activeAccount.rate.toString().match(/^[+-]?\d+(\.\d+)?$/) === null) {
             alert("Invalid Entry in Rate\nPlease Enter Numeric Values Only")
             return false;
-        }else if(activeAccount.baseAmount!=null && activeAccount.baseAmount!='' && activeAccount.baseAmount.toString().match(/^[+-]?\d+(\.\d+)?$/)===null){
+        } else if (activeAccount.baseAmount != null && activeAccount.baseAmount != '' && activeAccount.baseAmount.toString().match(/^[+-]?\d+(\.\d+)?$/) === null) {
             alert("Invalid Entry in Base Amount\nPlease Enter Numeric Values Only")
             return false;
         }
@@ -129,7 +150,7 @@ class AccountNameMaster extends React.Component {
 
     render() {
         const { loggingIn, companyMasterList, statusList, accountHolderMasterList } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted ,error} = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, error, isLogout } = this.state;
         const { name, companyId, accountHolderMasterId, statusId, rate, baseAmount } = activeAccount;
         const items = []
         const elements = this.state.searchResult;
@@ -156,7 +177,7 @@ class AccountNameMaster extends React.Component {
 
         return (
             <div>
-                <NavigationBar />
+                <NavigationBar isLogout={isLogout} />
                 <div className="outer-panel">
                     <div className="row" >
                         <div className="outer-search-panel col-sm-3">
@@ -188,7 +209,7 @@ class AccountNameMaster extends React.Component {
                                                 onClick={() => this.setState({ isDisabled: false, isUpdateCall: true })}><Icon.Check />Modify</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="danger" onClick={this.deleteAccountNameMaster}><Icon.Trash />Delete</Button>
+                                            <Button variant="danger" disabled={activeAccount.id===''?true:false} onClick={this.deleteAccountNameMaster}><Icon.Trash />Delete</Button>
                                         </div>
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>

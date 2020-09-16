@@ -4,7 +4,7 @@ import { Navbar, FormControl, Button } from 'react-bootstrap'
 import NavigationBar from './NavigationBar'
 import * as Icon from 'react-bootstrap-icons';
 import * as holderGroupMasterService from "../service/HolderGroupMasterService";
-import {history} from './../helpers/history';
+import { history } from './../helpers/history';
 
 import * as actions from '../state/actions';
 
@@ -18,7 +18,8 @@ class HolderGroupMaster extends React.Component {
             activeAccount: { id: '', name: '', userName: '', password: '', remarks: '' },
             isDisabled: true,
             isUpdateCall: false,
-            isSubmitted: false
+            isSubmitted: false,
+            isLogout: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -46,17 +47,27 @@ class HolderGroupMaster extends React.Component {
                         this.setState({ isDisabled: true, isUpdateCall: false })
                     })
                     .catch(error => {
-                        alert("Failed to update Group Holder.\nError : "+error);
+                        if (error === 401) {
+                            alert("Session Expired !!\nPlease login.")
+                            this.setState({ isLogout: true })
+                        } else {
+                            alert("Failed to update Group Holder.\nError : " + error);
+                        }
                     })
             } else {
                 holderGroupMasterService.save(this.state.activeAccount)
                     .then(response => {
                         console.log(response)
                         this.getHolderGroupMasterList();
-                        this.setState({ isDisabled: true,activeAccount:response.data})
+                        this.setState({ isDisabled: true, activeAccount: response.data })
                     })
                     .catch(error => {
-                        alert("Failed to create Group Holder.\nError : "+error);
+                        if (error === 401) {
+                            alert("Session Expired !!\nPlease login.")
+                            this.setState({ isLogout: true })
+                        } else {
+                            alert("Failed to create Group Holder.\nError : " + error);
+                        }
                     })
             }
         }
@@ -71,8 +82,8 @@ class HolderGroupMaster extends React.Component {
                 const { holderGroupMasterList } = this.props;
                 this.setState({ searchResult: holderGroupMasterList, isSubmitted: false })
             })
-            .catch(error=>{
-                alert("Failed to load Group Holder List.\nError:"+error)
+            .catch(error => {
+                alert("Failed to load Group Holder List.\nError:" + error)
             })
     }
 
@@ -83,11 +94,16 @@ class HolderGroupMaster extends React.Component {
             holderGroupMasterService.deleteHolderGroupMaster(this.state.activeAccount.id)
                 .then(response => {
                     console.log(response)
-                    this.setState({activeAccount: { id: '', name: '', userName: '', password: '', remarks: '' }});
+                    this.setState({ activeAccount: { id: '', name: '', userName: '', password: '', remarks: '' } });
                     this.getHolderGroupMasterList();
                 })
                 .catch(error => {
-                    alert("Failed to delete Group Holder.\nError : "+error)
+                    if (error === 401) {
+                        alert("Session Expired !!\nPlease login.")
+                        this.setState({ isLogout: true })
+                    } else {
+                        alert("Failed to delete Group Holder.\nError : " + error)
+                    }
                 })
         }
     }
@@ -121,7 +137,7 @@ class HolderGroupMaster extends React.Component {
 
     render() {
         const { loggingIn } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, isLogout } = this.state;
         const { name, userName, password, remarks } = activeAccount;
         const items = []
         const elements = this.state.searchResult;
@@ -132,7 +148,7 @@ class HolderGroupMaster extends React.Component {
 
         return (
             <div>
-                <NavigationBar />
+                <NavigationBar isLogout={isLogout} />
                 <div className="outer-panel">
                     <div className="row" >
                         <div className="outer-search-panel col-sm-3">
@@ -164,10 +180,10 @@ class HolderGroupMaster extends React.Component {
                                                 onClick={() => this.setState({ isDisabled: false, isUpdateCall: true })}><Icon.Check />Modify</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="danger" onClick={this.deleteHolderGroupMaster}><Icon.Trash />Delete</Button>
+                                            <Button variant="danger" disabled={activeAccount.id===''?true:false} onClick={this.deleteHolderGroupMaster}><Icon.Trash />Delete</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="warning" onClick={()=>history.push('/')}><Icon.X />Close</Button>
+                                            <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
                                         </div>
                                     </Navbar>
                                 </div>

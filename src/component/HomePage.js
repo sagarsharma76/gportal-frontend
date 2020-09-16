@@ -11,14 +11,18 @@ class HomePage extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            isLogout: false
+        };
+
         this.handleChange = this.handleChange.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getStatusList();
         this.getCompanyMasterList();
         this.getAccountHolderMasterList();
-        
+
     }
 
     getCompanyMasterList() {
@@ -31,8 +35,13 @@ class HomePage extends React.Component {
                 console.log(companyMasterList)
                 this.setState({ searchResult: companyMasterList, isSubmitted: false })
             })
-            .catch(error=>{
-                alert("Failed to load Group Holder List.\nError:"+error)
+            .catch(error => {
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load Group Holder List.\nError:" + error)
+                }
             })
     }
 
@@ -48,7 +57,7 @@ class HomePage extends React.Component {
             })
     }
 
-    getStatusList(){
+    getStatusList() {
         const { dispatch } = this.props;
         dispatch(actions.request());
         loginService.getStatusList()
@@ -56,11 +65,16 @@ class HomePage extends React.Component {
                 console.log(response)
                 dispatch(actions.getStatusListSuccess(response.data));
             })
-            .catch(error=>{
-                alert("Failed to load Group Holder List.\nError:"+error)
+            .catch(error => {
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load Group Holder List.\nError:" + error)
+                }
             })
 
-        
+
     }
 
     handleChange(e) {
@@ -71,7 +85,7 @@ class HomePage extends React.Component {
     render() {
         return (
             <div>
-            <NavigationBar/>
+                <NavigationBar isLogout={this.state.isLogout} />
             </div>
         );
     }

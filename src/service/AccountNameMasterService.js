@@ -1,4 +1,3 @@
-import { authHeader } from '../helpers/auth-header';
 import * as http from '../helpers/http-call';
 
 export function getAll() {
@@ -14,6 +13,9 @@ export function getAll() {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -35,6 +37,9 @@ export function save(accountNameMaster) {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -59,6 +64,9 @@ export function update(accountNameMaster) {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -76,11 +84,14 @@ export function deleteAccountNameMaster(accountNameMasterId) {
         // 'access-control-allow-credentials': true,
         // 'content-type': 'application/json'
     }
-    return http.deleteMethod(apiEndpoint
+    return http.deleteMethod(apiEndpoint,headers
     ).then(response => {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);

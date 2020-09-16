@@ -12,7 +12,10 @@ class NavigationBar extends React.Component {
         this.state = { isOpen: false }
     }
 
-    componentDidMount() {
+    componentDidMount(props) {
+        if(this.props.isLogout === true){
+            this.logout();
+        }
     }
 
     handleOpen = () => {

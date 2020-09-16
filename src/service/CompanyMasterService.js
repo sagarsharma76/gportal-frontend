@@ -1,4 +1,3 @@
-import { authHeader } from '../helpers/auth-header';
 import * as http from '../helpers/http-call';
 
 export function getAll() {
@@ -14,6 +13,9 @@ export function getAll() {
         console.log(response);
         if (response.success === true) {
             return response 
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -35,6 +37,9 @@ export function save(companyMaster) {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -59,6 +64,9 @@ export function update(companyMaster) {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -74,13 +82,16 @@ export function deleteCompanyMaster(companyMasterId) {
     let headers = {
         // 'Access-Control-Allow-Origin': '*',
         // 'access-control-allow-credentials': true,
-        // 'content-type': 'application/json'
+        'content-type': 'application/json'
     }
-    return http.deleteMethod(apiEndpoint
+    return http.deleteMethod(apiEndpoint,headers
     ).then(response => {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -95,13 +106,16 @@ export function getCompanyTransactions(companyId){
     let headers = {
         // 'Access-Control-Allow-Origin': '*',
         // 'access-control-allow-credentials': true,
-        // 'content-type': 'application/json'
+        'content-type': 'application/json'
     }
-    return http.getMethod(apiEndpoint
+    return http.getMethod(apiEndpoint,headers
     ).then(response => {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -128,6 +142,9 @@ export function saveCompanyAccountTransaction(transaction){
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);
@@ -143,13 +160,16 @@ export function clearCompanyTransations(companyId){
     let headers = {
         // 'Access-Control-Allow-Origin': '*',
         // 'access-control-allow-credentials': true,
-        // 'content-type': 'application/json'
+        'content-type': 'application/json'
     }
-    return http.putMethod(apiEndpoint
+    return http.putMethod(apiEndpoint,{},headers
     ).then(response => {
         console.log(response);
         if (response.success === true) {
             return response
+        }else if (response.status === 401) {
+            const error = 401;
+            return Promise.reject(error);
         } else {
             const error = (response && response.errors && response.errors[0].errorMessage) || 'API Call Failed';
             return Promise.reject(error);

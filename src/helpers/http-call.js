@@ -3,10 +3,13 @@ import "whatwg-fetch";
 let IP="18.191.204.2"
 let port=":8080"
 
+let token = 'Bearer '+localStorage.getItem('token');
+
 // let IP="localhost"
 // let port=":3500"
 
 export function getMethod(apiEndpoint,headers){
+    headers.Authorization = token;
     return fetch("http://"+IP+port+apiEndpoint,{
         method: 'GET',
         headers:headers,
@@ -20,6 +23,7 @@ export function getMethod(apiEndpoint,headers){
 }
 
 export function putMethod(apiEndpoint,body,headers){
+    headers.Authorization = token;
     return fetch("http://"+IP+port+apiEndpoint, {
         method: 'PUT',
         headers:headers,
@@ -35,6 +39,7 @@ export function putMethod(apiEndpoint,body,headers){
 }
 
 export function postMethod(apiEndpoint,body,headers){
+    headers.Authorization = token;
     return fetch("http://"+IP+port+apiEndpoint, {
         method: 'POST',
         headers:headers,
@@ -50,6 +55,7 @@ export function postMethod(apiEndpoint,body,headers){
 }
 
 export function deleteMethod(apiEndpoint,headers){
+    headers.Authorization = token;
     return fetch("http://"+IP+port+apiEndpoint,{
         method: 'DELETE',
         headers:headers,

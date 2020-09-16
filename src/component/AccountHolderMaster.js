@@ -19,7 +19,8 @@ class AccountHolderMaster extends React.Component {
             activeAccount: { id: '', name: '', userName: '', password: '', remarks: '', mobileNumber: '', holderGroupMasterId: '' },
             isDisabled: true,
             isUpdateCall: false,
-            isSubmitted: false
+            isSubmitted: false,
+            isLogout: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -48,7 +49,12 @@ class AccountHolderMaster extends React.Component {
                         this.getAccountHolderMasterList();
                         this.setState({ isDisabled: true, isUpdateCall: false })
                     }).catch(error => {
-                        alert("Failed to update Account Holder.\nError : "+error);
+                        if (error === 401) {
+                            alert("Session Expired !!\nPlease login.")
+                            this.setState({ isLogout: true })
+                        } else {
+                            alert("Failed to update Account Holder.\nError : " + error);
+                        }
                     })
             } else {
                 accountHolderMasterService.save(this.state.activeAccount)
@@ -57,7 +63,12 @@ class AccountHolderMaster extends React.Component {
                         this.getAccountHolderMasterList();
                         this.setState({ isDisabled: true, activeAccount: response.data })
                     }).catch(error => {
-                        alert("Failed to create Account Holder.\nError : "+error);
+                        if (error === 401) {
+                            alert("Session Expired !!\nPlease login.")
+                            this.setState({ isLogout: true })
+                        } else {
+                            alert("Failed to create Account Holder.\nError : " + error);
+                        }
                     })
             }
         }
@@ -72,6 +83,13 @@ class AccountHolderMaster extends React.Component {
                 dispatch(actions.getAccountHolderMasterListSuccess(response.data));
                 const { accountHolderMasterList } = this.props;
                 this.setState({ searchResult: accountHolderMasterList, isSubmitted: false })
+            }).catch(error => {
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load Account name list.\nError : " + error);
+                }
             })
     }
 
@@ -84,7 +102,12 @@ class AccountHolderMaster extends React.Component {
                 dispatch(actions.getHolderGroupMasterListSuccess(response.data));
             })
             .catch(error => {
-                alert("Failed to load Account Holder List.\nError:" + error)
+                if (error === 401) {
+                    alert("Session Expired !!\nPlease login.")
+                    this.setState({ isLogout: true })
+                } else {
+                    alert("Failed to load Account Holder List.\nError:" + error)
+                }
             })
     }
 
@@ -99,7 +122,12 @@ class AccountHolderMaster extends React.Component {
                     this.setState({ activeAccount: { id: '', name: '', userName: '', password: '', remarks: '', mobileNumber: '', holderGroupMasterId: '', statusId: '' } })
                     this.getAccountHolderMasterList();
                 }).catch(error => {
-                    alert("Failed to delete Account Holder.\nError : " + error)
+                    if (error === 401) {
+                        alert("Session Expired !!\nPlease login.")
+                        this.setState({ isLogout: true })
+                    } else {
+                        alert("Failed to delete Account Holder.\nError : " + error)
+                    }
                 })
         }
     }
@@ -128,7 +156,7 @@ class AccountHolderMaster extends React.Component {
         if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '') {
             this.setState({ isSubmitted: true })
             return false;
-        }else if(activeAccount.mobileNumber != null && activeAccount.mobileNumber != '' && activeAccount.mobileNumber.toString().match(/^([9]{1})([234789]{1})([0-9]{8})$/)===null){
+        } else if (activeAccount.mobileNumber != null && activeAccount.mobileNumber != '' && activeAccount.mobileNumber.toString().match(/^([9]{1})([234789]{1})([0-9]{8})$/) === null) {
             alert("Invalid Mobile Number Entered")
             return false;
         }
@@ -137,7 +165,7 @@ class AccountHolderMaster extends React.Component {
 
     render() {
         const { loggingIn, holderGroupMasterList, statusList } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, isLogout } = this.state;
         const { name, userName, password, remarks, mobileNumber, statusId, holderGroupMasterId } = activeAccount;
         const items = []
         const elements = this.state.searchResult;
@@ -160,7 +188,7 @@ class AccountHolderMaster extends React.Component {
 
         return (
             <div>
-                <NavigationBar />
+                <NavigationBar isLogout={isLogout} />
                 <div className="outer-panel">
                     <div className="row" >
                         <div className="outer-search-panel col-sm-3">
@@ -192,7 +220,7 @@ class AccountHolderMaster extends React.Component {
                                                 onClick={() => this.setState({ isDisabled: false, isUpdateCall: true })}><Icon.Check />Modify</Button>
                                         </div>
                                         <div className="btn-component">
-                                            <Button variant="danger" onClick={this.deleteAccountHolderMaster}><Icon.Trash />Delete</Button>
+                                            <Button variant="danger" disabled={activeAccount.id===''?true:false} onClick={this.deleteAccountHolderMaster}><Icon.Trash />Delete</Button>
                                         </div>
                                         <div className="btn-component">
                                             <Button variant="warning" onClick={() => history.push('/')}><Icon.X />Close</Button>
