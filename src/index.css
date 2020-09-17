@@ -134,9 +134,16 @@ body, html, .App, #root, .auth-wrapper {
   color:#ffffe1;
 }
 
+.list-group{
+  max-height: 80vh;
+  overflow-y:scroll;
+  scroll-behavior: smooth;
+}
 
 .list-group-item{
   padding: 1% !important;
+  font-family: Calibri,Trebuchet MS,sans-serif;
+  font-size: 14px;
 }
 
 .heading{
@@ -193,4 +200,39 @@ td{
 
 .hidden{
   display: none;
+}
+
+.navbar-custom{
+  background-color: #001529 !important;
+  color:white !important
+}
+
+.navbar-light .navbar-nav .nav-link{
+  color:white !important;
+}
+
+.navbar-custom .nav-item:hover .nav-link{
+  text-decoration: underline !important;
+}
+
+.navbar-custom .dropdown-item:hover{
+  text-decoration: underline !important;
+  background-color: #001529 !important;
+}
+
+.navbar-custom .dropdown-item{
+  color:white !important;
+}
+
+.navbar-custom .dropdown-menu{
+  background-color: #001529 !important;
+}
+
+.table-wrapper{
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
+.navbar-toggler{
+  background-color:white !important;
 }

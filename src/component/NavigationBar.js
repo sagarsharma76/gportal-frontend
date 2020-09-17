@@ -40,7 +40,7 @@ class NavigationBar extends React.Component {
     render() {
         return (
             <div>
-                <Navbar className="navbar navbar-dark bg-dark" expand="lg">
+                <Navbar className="navbar-custom navbar" expand="lg">
                     <Navbar.Brand style={{"color":"#ffffff"}} href="" onClick={()=>history.push('/')}>G-Portal</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">

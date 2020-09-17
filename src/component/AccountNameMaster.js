@@ -183,7 +183,7 @@ class AccountNameMaster extends React.Component {
                         <div className="outer-search-panel col-sm-3">
                             <div className="inner-search-panel">
                                 <div>
-                                    <Navbar className="inner-nav" bg="dark" variant="dark">
+                                    <Navbar className="inner-nav navbar-custom">
                                         <div className="col-12">
                                             <FormControl type="text" value={searchTerm} placeholder="Search" name="searchTerm" onChange={this.handleSearchChange} />
                                         </div>
@@ -191,7 +191,7 @@ class AccountNameMaster extends React.Component {
                                 </div>
                                 <div className="inner-search-box">
                                     <ul className="list-group">
-                                        <li className="heading list-group-item disabled">Account Name</li>
+                                        <li className="heading list-group-item disabled navbar-custom">Account Name</li>
                                         {items}
                                     </ul>
                                 </div>
@@ -200,7 +200,7 @@ class AccountNameMaster extends React.Component {
                         <div className="outer-work-panel col-sm-9">
                             <div className="inner-work-panel">
                                 <div hidden={!isDisabled}>
-                                    <Navbar bg="dark" variant="dark">
+                                    <Navbar className="navbar-custom">
                                         <div className="btn-component">
                                             <Button variant="success" onClick={this.clearForm}><Icon.Plus />New</Button>
                                         </div>
@@ -217,7 +217,7 @@ class AccountNameMaster extends React.Component {
                                     </Navbar>
                                 </div>
                                 <div hidden={isDisabled}>
-                                    <Navbar bg="dark" variant="dark">
+                                    <Navbar className="navbar-custom">
                                         <div className="btn-component">
                                             <Button variant="success" onClick={this.saveOrUpdateAccountNameMaster}><Icon.FileEarmark />Save</Button>
                                         </div>

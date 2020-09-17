@@ -214,7 +214,7 @@ class HolderWiseEntry extends React.Component {
                         <div className="outer-search-panel col-sm-3">
                             <div className="inner-search-panel">
                                 <div>
-                                    <Navbar className="inner-nav" bg="dark" variant="dark">
+                                    <Navbar className="inner-nav navbar-custom">
                                         <div className="col-12">
                                             <FormControl type="text" value={searchTerm} placeholder="Search" name="searchTerm" onChange={this.handleSearchChange} />
                                         </div>
@@ -222,7 +222,7 @@ class HolderWiseEntry extends React.Component {
                                 </div>
                                 <div className="inner-search-box">
                                     <ul className="list-group">
-                                        <li className="heading list-group-item disabled">Company Name</li>
+                                        <li className="heading list-group-item disabled navbar-custom">Company Name</li>
                                         {items}
                                     </ul>
                                 </div>
@@ -231,7 +231,7 @@ class HolderWiseEntry extends React.Component {
                         <div className="outer-work-panel col-sm-9">
                             <div className="inner-work-panel">
                                 <div>
-                                    <Navbar bg="dark" variant="dark">
+                                    <Navbar className="navbar-custom">
                                         <div className="btn-component">
                                             <Button variant="success"><Icon.FileEarmark />Save</Button>
                                         </div>
@@ -319,7 +319,7 @@ class HolderWiseEntry extends React.Component {
                                                 <div className="help-block">Remarks are required</div>
                                             } */}
                                         </div>
-                                        <div>{lastSaved}</div>
+                                        <div>Last Saved : {lastSaved}</div>
                                     </div>
                                 </div>
                             </div>
