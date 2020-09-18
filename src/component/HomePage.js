@@ -27,7 +27,6 @@ class HomePage extends React.Component {
 
     getCompanyMasterList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         companyMasterService.getAll()
             .then(response => {
                 dispatch(actions.getCompanyMasterListSuccess(response.data));
@@ -47,7 +46,6 @@ class HomePage extends React.Component {
 
     getAccountHolderMasterList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         accountHolderMasterService.getAll()
             .then(response => {
                 console.log(response)
@@ -59,22 +57,11 @@ class HomePage extends React.Component {
 
     getStatusList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         loginService.getStatusList()
             .then(response => {
                 console.log(response)
                 dispatch(actions.getStatusListSuccess(response.data));
             })
-            .catch(error => {
-                if (error === 401) {
-                    alert("Session Expired !!\nPlease login.")
-                    this.setState({ isLogout: true })
-                } else {
-                    alert("Failed to load Group Holder List.\nError:" + error)
-                }
-            })
-
-
     }
 
     handleChange(e) {

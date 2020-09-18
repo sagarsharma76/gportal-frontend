@@ -1,24 +1,23 @@
 import * as actionTypes from './action-types';
 
 const initialState = {
-  loggedIn: false,
-  user : null
+  token : null
 }
 
 export default function AuthenticationReducer(state = initialState, action) {
   switch (action.type) {
     case actionTypes.LOGIN_REQUEST:
       return {
-        loggingIn: true,
-        user: action.user
+        user: action.token
       };
     case actionTypes.LOGIN_SUCCESS:
       return {
-        loggedIn: true,
-        user: action.user
+        token: action.token
       };
     case actionTypes.LOGOUT:
-      return {};
+      return {
+        token:null
+      };
     default:
       return state
   }

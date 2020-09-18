@@ -38,7 +38,6 @@ class CompanyMaster extends React.Component {
         if (isValid) {
             const isUpdateCall = this.state.isUpdateCall
             const { dispatch } = this.props;
-            dispatch(actions.request());
             if (isUpdateCall) {
                 companyMasterService.update(this.state.activeAccount)
                     .then(response => {
@@ -65,7 +64,6 @@ class CompanyMaster extends React.Component {
 
     getCompanyMasterList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         companyMasterService.getAll()
             .then(response => {
                 dispatch(actions.getCompanyMasterListSuccess(response.data));
@@ -86,7 +84,6 @@ class CompanyMaster extends React.Component {
     deleteCompanyMaster() {
         if (window.confirm('Are you sure you wish to delete this group?')) {
             const { dispatch } = this.props;
-            dispatch(actions.request());
             companyMasterService.deleteCompanyMaster(this.state.activeAccount.id)
                 .then(response => {
                     console.log(response)

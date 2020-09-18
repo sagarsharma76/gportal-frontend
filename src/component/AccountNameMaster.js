@@ -39,7 +39,6 @@ class AccountNameMaster extends React.Component {
         if (isValid) {
             const isUpdateCall = this.state.isUpdateCall
             const { dispatch } = this.props;
-            dispatch(actions.request());
             if (isUpdateCall) {
                 accountNameMasterService.update(this.state.activeAccount)
                     .then(response => {
@@ -76,7 +75,6 @@ class AccountNameMaster extends React.Component {
 
     getAccountNameMasterList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         accountNameMasterService.getAll()
             .then(response => {
                 dispatch(actions.getAccountNameMasterListSuccess(response.data));
@@ -96,7 +94,6 @@ class AccountNameMaster extends React.Component {
     deleteAccountNameMaster() {
         if (window.confirm('Are you sure you wish to delete this group?')) {
             const { dispatch } = this.props;
-            dispatch(actions.request());
             accountNameMasterService.deleteAccountNameMaster(this.state.activeAccount.id)
                 .then(response => {
                     console.log(response)

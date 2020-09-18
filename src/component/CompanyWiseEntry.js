@@ -25,7 +25,8 @@ class CompanyWiseEntry extends React.Component {
             obalanceSum: 0,
             balanceSum: 0,
             successMessage: false,
-            isLogout: false
+            isLogout: false,
+            lastSaved:''
         };
 
         this.myRef = React.createRef();
@@ -52,12 +53,12 @@ class CompanyWiseEntry extends React.Component {
             return;
         }
         const { dispatch } = this.props;
-        dispatch(actions.request());
 
         companyMasterService.saveCompanyAccountTransaction(transaction)
             .then(response => {
                 console.log(response)
                 this.showSuccessMessage();
+                this.setState({lastSaved:response.data.lastSaved})
             })
             .catch(error => {
                 if (error === 401) {
@@ -71,7 +72,6 @@ class CompanyWiseEntry extends React.Component {
 
     getCompanyMasterList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         companyMasterService.getAll()
             .then(response => {
                 dispatch(actions.getCompanyMasterListSuccess(response.data));
@@ -95,7 +95,6 @@ class CompanyWiseEntry extends React.Component {
 
     getCompanyTransactions(company) {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         companyMasterService.getCompanyTransactions(company.id)
             .then(response => {
                 console.log(response);
@@ -110,7 +109,7 @@ class CompanyWiseEntry extends React.Component {
                     }
                 }
 
-                this.setState({ activeCompanyTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: company });
+                this.setState({ activeCompanyTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: company, lastSaved:response.data.lastSaved});
             })
     }
 
@@ -143,7 +142,6 @@ class CompanyWiseEntry extends React.Component {
 
     clearTransactions(company) {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         companyMasterService.clearCompanyTransations(company.id)
             .then(response => {
                 console.log(response);
@@ -160,9 +158,8 @@ class CompanyWiseEntry extends React.Component {
 
 
     render() {
-        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum, isLogout } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum, isLogout,lastSaved } = this.state;
         const { name, baseRate, remarks } = activeAccount || '';
-        const { lastSaved } = activeCompanyTransaction;
         const items = []
         const elements = this.state.searchResult;
         for (const [index, value] of elements.entries()) {
@@ -179,7 +176,7 @@ class CompanyWiseEntry extends React.Component {
                     <td>{srNum}</td>
                     <td>{value.accountName}</td>
                     <td>{value.holderName}</td>
-                    <td>{value.obalance}</td>
+                    {/* <td>{value.obalance}</td> */}
                     <td>{value.rate}</td>
                     <td>{value.base}</td>
                     <td><input style={{ 'width': '80%' }} type="text" value={value.balance} name="balance"
@@ -230,9 +227,9 @@ class CompanyWiseEntry extends React.Component {
                             <div className="inner-work-panel">
                                 <div>
                                     <Navbar className="navbar-custom">
-                                        <div className="btn-component">
+                                        {/* <div className="btn-component">
                                             <Button variant="success"><Icon.FileEarmark />Save</Button>
-                                        </div>
+                                        </div> */}
                                         <div className="btn-component">
                                             <Button variant="danger"
                                                 onClick={() => this.clearTransactions(this.state.activeAccount)}><Icon.Trash />Clear</Button>
@@ -286,7 +283,7 @@ class CompanyWiseEntry extends React.Component {
                                                         <th scope="col" style={{ 'width': '5%' }}>Sr.</th>
                                                         <th scope="col" style={{ 'width': '10%' }}>Account</th>
                                                         <th scope="col" style={{ 'width': '10%' }}>Holder</th>
-                                                        <th scope="col" style={{ 'width': '10%' }}>O.Balance</th>
+                                                        {/* <th scope="col" style={{ 'width': '10%' }}>O.Balance</th> */}
                                                         <th scope="col" style={{ 'width': '5%' }}>Rate</th>
                                                         <th scope="col" style={{ 'width': '10%' }}>Base</th>
                                                         <th scope="col" style={{ 'width': '10%' }}>Balance</th>
@@ -302,7 +299,7 @@ class CompanyWiseEntry extends React.Component {
                                                         <th scope="col">Total</th>
                                                         <th scope="col"></th>
                                                         <th scope="col"></th>
-                                                        <th scope="col">{obalanceSum}</th>
+                                                        {/* <th scope="col">{obalanceSum}</th> */}
                                                         <th scope="col"></th>
                                                         <th scope="col"></th>
                                                         <th scope="col">{balanceSum}</th>
@@ -317,7 +314,7 @@ class CompanyWiseEntry extends React.Component {
                                                 <div className="help-block">Remarks are required</div>
                                             } */}
                                         </div>
-                                        <div>Last Saved : {lastSaved}</div>
+                                        <div style={{'display':lastSaved?'':'none'}}> Last Saved : {lastSaved}</div>
                                     </div>
                                 </div>
                             </div>

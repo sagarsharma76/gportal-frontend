@@ -25,7 +25,8 @@ class HolderWiseEntry extends React.Component {
             obalanceSum: 0,
             balanceSum: 0,
             successMessage: false,
-            isLogout: false
+            isLogout: false,
+            lastSaved:''
         };
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -50,11 +51,11 @@ class HolderWiseEntry extends React.Component {
             return;
         }
         const { dispatch } = this.props;
-        dispatch(actions.request());
         accountHolderMasterService.saveAccountHolderTransaction(transaction)
             .then(response => {
                 console.log(response)
                 this.showSuccessMessage()
+                this.setState({lastSaved:response.data.lastSaved})
             })
             .catch(error => {
                 if (error === 401) {
@@ -68,7 +69,6 @@ class HolderWiseEntry extends React.Component {
 
     getAccountHolderMasterList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         accountHolderMasterService.getAll()
             .then(response => {
                 console.log(response)
@@ -90,7 +90,6 @@ class HolderWiseEntry extends React.Component {
 
     getAccountHolderTransactions(accountHolder) {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         accountHolderMasterService.getAccountHolderTransactions(accountHolder.id)
             .then(response => {
 
@@ -106,7 +105,7 @@ class HolderWiseEntry extends React.Component {
                     }
                 }
 
-                this.setState({ activeAccountHolderTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: accountHolder });
+                this.setState({ activeAccountHolderTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: accountHolder,lastSaved:response.data.lastSaved });
             }).catch(error => {
                 if (error === 401) {
                     alert("Session Expired !!\nPlease login.")
@@ -145,7 +144,6 @@ class HolderWiseEntry extends React.Component {
 
     clearTransactions(accountHolder) {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         accountHolderMasterService.clearAccountHolderTransations(accountHolder.id)
             .then(response => {
                 console.log(response);
@@ -162,9 +160,8 @@ class HolderWiseEntry extends React.Component {
 
     render() {
         const { loggingIn } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeAccountHolderTransaction, obalanceSum, balanceSum, isLogout } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeAccountHolderTransaction, obalanceSum, balanceSum, isLogout,lastSaved } = this.state;
         const { name, baseRate, remarks } = activeAccount || '';
-        const { lastSaved } = activeAccountHolderTransaction;
         const items = []
         const elements = this.state.searchResult;
         for (const [index, value] of elements.entries()) {
@@ -181,7 +178,7 @@ class HolderWiseEntry extends React.Component {
                     <td>{srNum}</td>
                     <td>{value.accountName}</td>
                     <td>{value.holderName}</td>
-                    <td>{value.obalance}</td>
+                    {/* <td>{value.obalance}</td> */}
                     <td>{value.rate}</td>
                     <td>{value.base}</td>
                     <td><input style={{ 'width': '80%' }} type="text" value={value.balance} name="balance"
@@ -232,9 +229,9 @@ class HolderWiseEntry extends React.Component {
                             <div className="inner-work-panel">
                                 <div>
                                     <Navbar className="navbar-custom">
-                                        <div className="btn-component">
+                                        {/* <div className="btn-component">
                                             <Button variant="success"><Icon.FileEarmark />Save</Button>
-                                        </div>
+                                        </div> */}
                                         <div className="btn-component">
                                             <Button variant="danger"
                                                 onClick={() => this.clearTransactions(this.state.activeAccount)}><Icon.Trash />Clear</Button>
@@ -288,7 +285,7 @@ class HolderWiseEntry extends React.Component {
                                                         <th scope="col" style={{ 'width': '5%' }}>Sr.</th>
                                                         <th scope="col" style={{ 'width': '10%' }}>Account</th>
                                                         <th scope="col" style={{ 'width': '10%' }}>Holder</th>
-                                                        <th scope="col" style={{ 'width': '10%' }}>O.Balance</th>
+                                                        {/* <th scope="col" style={{ 'width': '10%' }}>O.Balance</th> */}
                                                         <th scope="col" style={{ 'width': '5%' }}>Rate</th>
                                                         <th scope="col" style={{ 'width': '10%' }}>Base</th>
                                                         <th scope="col" style={{ 'width': '10%' }}>Balance</th>
@@ -304,7 +301,7 @@ class HolderWiseEntry extends React.Component {
                                                         <th scope="col">Total</th>
                                                         <th scope="col"></th>
                                                         <th scope="col"></th>
-                                                        <th scope="col">{obalanceSum}</th>
+                                                        {/* <th scope="col">{obalanceSum}</th> */}
                                                         <th scope="col"></th>
                                                         <th scope="col"></th>
                                                         <th scope="col">{balanceSum}</th>
@@ -318,8 +315,8 @@ class HolderWiseEntry extends React.Component {
                                             {isSubmitted && !remarks &&
                                                 <div className="help-block">Remarks are required</div>
                                             } */}
-                                        </div>
-                                        <div>Last Saved : {lastSaved}</div>
+                                        </div >
+                                        <div style={{'display':lastSaved?'':'none'}}> Last Saved : {lastSaved}</div>
                                     </div>
                                 </div>
                             </div>

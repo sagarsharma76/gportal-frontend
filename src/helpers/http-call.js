@@ -1,14 +1,26 @@
 import "whatwg-fetch";
+import MS from '../store';
 
 let IP = "18.191.204.2"
 let port = ":8080"
 
-let token = 'Bearer ' + localStorage.getItem('token');
+
 
 // let IP="localhost"
 // let port=":3500"
 
+let token = ''
+
+function getToken(){
+    token = "Bearer "+MS.store.getState().authenticationReducer.token;
+    console.log(token)
+}
+
+const unsubscribe = MS.store.subscribe(getToken)
+unsubscribe()
+
 export function getMethod(apiEndpoint, headers) {
+    getToken()
     headers.Authorization = token;
     return fetch("http://" + IP + port + apiEndpoint, {
         method: 'GET',
@@ -23,6 +35,7 @@ export function getMethod(apiEndpoint, headers) {
 }
 
 export function putMethod(apiEndpoint, body, headers) {
+    getToken()
     headers.Authorization = token;
     return fetch("http://" + IP + port + apiEndpoint, {
         method: 'PUT',
@@ -39,6 +52,7 @@ export function putMethod(apiEndpoint, body, headers) {
 }
 
 export function postMethod(apiEndpoint, body, headers) {
+    getToken()
     if (apiEndpoint !== '/login') {
         headers.Authorization = token;
     }
@@ -57,6 +71,7 @@ export function postMethod(apiEndpoint, body, headers) {
 }
 
 export function deleteMethod(apiEndpoint, headers) {
+    getToken()
     headers.Authorization = token;
     return fetch("http://" + IP + port + apiEndpoint, {
         method: 'DELETE',

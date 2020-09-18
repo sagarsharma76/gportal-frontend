@@ -41,12 +41,15 @@ class LoginPage extends React.Component {
                 .then(response => {
                     const token = (response && response.data && response.data.token) || "";
                     if (token != null && token != "") {
-                        localStorage.setItem('token', token);
-                        setTimeout(() => {
-                            if(localStorage.getItem('token')!==null && localStorage.getItem('token')!==undefined ){
-                                history.push('/');
-                            }
-                        }, 300); 
+                        //localStorage.setItem('token', token);
+                        dispatch(actions.loginSuccess(token))
+                        console.log(this.props.token)
+                        history.push("/")
+                        // setTimeout(() => {
+                        //     if(this.props.token!==null && this.props.token!=='' && this.props.token!==undefined){
+                        //         history.push("/")
+                        //     }
+                        // }, 300); 
                     } else {
                         alert("Login Failed !!")
                     }
@@ -67,7 +70,6 @@ class LoginPage extends React.Component {
 
     render() {
         const { loggingIn,userName, password, submitted } = this.state;
-        console.log(loggingIn)
         return (
             <div className="auth-wrapper">
                 <div className="auth-inner">
@@ -105,7 +107,7 @@ class LoginPage extends React.Component {
 function mapStateToProps(state) {
     const { loggingIn } = state.authenticationReducer;
     return {
-        loggingIn
+        token:state.authenticationReducer.token
     };
 }
 

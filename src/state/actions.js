@@ -1,9 +1,9 @@
 import * as ActionTypes from "./action-types";
 
 
-export function request(user) { return { type: ActionTypes.LOGIN_REQUEST, user } }
-export function success(user) { return { type: ActionTypes.LOGIN_SUCCESS, user } }
-export function failure(error) { return { type: ActionTypes.LOGIN_FAILURE, error } }
+export function loginSuccess(token) { return { type: ActionTypes.LOGIN_SUCCESS, token } }
+
+export function logout() { return { type: ActionTypes.LOGOUT } }
 
 export function getHolderGroupMasterListSuccess(list) { 
     return { type: ActionTypes.GET_HOLDER_GROUP_MASTER_LIST_SUCCESS, list } 

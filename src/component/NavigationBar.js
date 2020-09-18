@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons';
 import { history } from '../helpers/history';
 import * as loginService from "../service/LoginService";
+import * as actions from '../state/actions';
 
 class NavigationBar extends React.Component {
    
@@ -33,7 +35,8 @@ class NavigationBar extends React.Component {
         // }).catch(error => {
         //     console.log(error)
         // })
-        localStorage.removeItem('token');
+        // const { dispatch } = this.props;
+        // dispatch(actions.logout())
         history.push('/login');
     }
 
@@ -51,8 +54,8 @@ class NavigationBar extends React.Component {
                                 onMouseEnter={(e) => document.getElementById("master-dropdown").click()}
                                 onMouseLeave={(e) => document.getElementById("master-dropdown").click()}
                             >
-                                <NavDropdown.Item href="" onClick={()=>history.push('/account-master')}>Account Name Master</NavDropdown.Item>
-                                <NavDropdown.Item href="" onClick={()=>history.push('/holder-master')}>Account Holder Master</NavDropdown.Item>
+                                <NavDropdown.Item href="" onClick={()=>history.push('/account-master')}>Create New Account Name</NavDropdown.Item>
+                                <NavDropdown.Item href="" onClick={()=>history.push('/holder-master')}>Create New Client Name</NavDropdown.Item>
                                 <NavDropdown.Item href="" onClick={()=>history.push('/company-master')}>Company Master</NavDropdown.Item>
                                 <NavDropdown.Item href="" onClick={()=>history.push('/holder-group-master')}>Holder Group Master</NavDropdown.Item>
                             </NavDropdown>
@@ -89,4 +92,4 @@ class NavigationBar extends React.Component {
     }
 }
 
-export default NavigationBar;
+export default connect()(NavigationBar);

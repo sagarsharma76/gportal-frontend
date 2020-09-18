@@ -41,7 +41,6 @@ class AccountHolderMaster extends React.Component {
         if (isValid) {
             const isUpdateCall = this.state.isUpdateCall
             const { dispatch } = this.props;
-            dispatch(actions.request());
             if (isUpdateCall) {
                 accountHolderMasterService.update(this.state.activeAccount)
                     .then(response => {
@@ -76,7 +75,6 @@ class AccountHolderMaster extends React.Component {
 
     getAccountHolderMasterList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         accountHolderMasterService.getAll()
             .then(response => {
                 console.log(response)
@@ -95,7 +93,6 @@ class AccountHolderMaster extends React.Component {
 
     getHolderGroupMasterList() {
         const { dispatch } = this.props;
-        dispatch(actions.request());
         holderGroupMasterService.getAll()
             .then(response => {
                 console.log(response)
@@ -115,7 +112,6 @@ class AccountHolderMaster extends React.Component {
     deleteAccountHolderMaster() {
         if (window.confirm('Are you sure you wish to delete this group?')) {
             const { dispatch } = this.props;
-            dispatch(actions.request());
             accountHolderMasterService.deleteAccountHolderMaster(this.state.activeAccount.id)
                 .then(response => {
                     console.log(response)
@@ -153,7 +149,7 @@ class AccountHolderMaster extends React.Component {
 
     validate() {
         const activeAccount = this.state.activeAccount;
-        if (activeAccount.name === '' || activeAccount.userName === '' || activeAccount.password === '') {
+        if (activeAccount.name === '') {
             this.setState({ isSubmitted: true })
             return false;
         } else if (activeAccount.mobileNumber != null && activeAccount.mobileNumber != '' && activeAccount.mobileNumber.toString().match(/^([9]{1})([234789]{1})([0-9]{8})$/) === null) {
@@ -270,17 +266,17 @@ class AccountHolderMaster extends React.Component {
                                             <div className="col-6" style={{ 'padding': '0px' }}>
                                                 <label className="lbl-form" htmlFor="userName">App Username :</label>
                                                 <input type="text" disabled={isDisabled} value={userName} className="form-control" name="userName" onChange={this.handleChange} />
-                                                {isSubmitted && !userName &&
+                                                {/* {isSubmitted && !userName &&
                                                     <div className="help-block">Username is required</div>
-                                                }
+                                                } */}
                                             </div>
 
                                             <div className="col-6" style={{ 'paddingRight': '0px', 'paddingLeft': '1%' }}>
                                                 <label className="lbl-form" htmlFor="password">App Password :</label>
                                                 <input type="password" disabled={isDisabled} value={password} className="form-control" name="password" onChange={this.handleChange} />
-                                                {isSubmitted && !password &&
+                                                {/* {isSubmitted && !password &&
                                                     <div className="help-block">Password is required</div>
-                                                }
+                                                } */}
                                             </div>
                                         </div>
                                         <div>
