@@ -133,11 +133,15 @@ class HolderWiseEntry extends React.Component {
         transactions[index].pointPnl = pointPnl
         transactions[index].profitLoss = profitLoss
         let balanceSum = 0;
+        let pointPnlSum = 0;
+        let profitLossSum = 0;
         for (let tran of transactions) {
             balanceSum = balanceSum + Number.parseFloat(tran.balance === '' ? 0 : tran.balance);
+            pointPnlSum = pointPnlSum + tran.pointPnl;
+            profitLossSum = profitLossSum + tran.profitLoss;
         }
 
-        this.setState({ activeAccountHolderTransaction: activeAccountHolderTransaction, balanceSum: balanceSum });
+        this.setState({ activeAccountHolderTransaction: activeAccountHolderTransaction, balanceSum: balanceSum ,pointPnlSum: pointPnlSum, profitLossSum: profitLossSum});
     }
 
     handleSearchChange(e) {

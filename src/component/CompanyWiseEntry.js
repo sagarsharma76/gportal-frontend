@@ -131,11 +131,15 @@ class CompanyWiseEntry extends React.Component {
         transactions[index].profitLoss = profitLoss
         let obalanceSum = 0;
         let balanceSum = 0;
+        let pointPnlSum = 0;
+        let profitLossSum = 0;
         for (let tran of transactions) {
             balanceSum = balanceSum + Number.parseFloat(tran.balance === '' ? 0 : tran.balance);
+            pointPnlSum = pointPnlSum + tran.pointPnl;
+            profitLossSum = profitLossSum + tran.profitLoss;
         }
 
-        this.setState({ activeCompanyTransaction: activeCompanyTransaction, balanceSum: balanceSum });
+        this.setState({ activeCompanyTransaction: activeCompanyTransaction, balanceSum: balanceSum ,pointPnlSum: pointPnlSum, profitLossSum: profitLossSum});
     }
 
     handleSearchChange(e) {
