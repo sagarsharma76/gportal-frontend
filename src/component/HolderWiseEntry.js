@@ -24,9 +24,11 @@ class HolderWiseEntry extends React.Component {
             date: date,
             obalanceSum: 0,
             balanceSum: 0,
+            pointPnlSum: 0,
+            profitLossSum: 0,
             successMessage: false,
             isLogout: false,
-            lastSaved:''
+            lastSaved: ''
         };
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -55,7 +57,7 @@ class HolderWiseEntry extends React.Component {
             .then(response => {
                 console.log(response)
                 this.showSuccessMessage()
-                this.setState({lastSaved:response.data.lastSaved})
+                this.setState({ lastSaved: response.data.lastSaved })
             })
             .catch(error => {
                 if (error === 401) {
@@ -97,15 +99,19 @@ class HolderWiseEntry extends React.Component {
                 let activeAccountHolderTransaction = response.data;
                 let obalanceSum = 0;
                 let balanceSum = 0;
+                let pointPnlSum = 0;
+                let profitLossSum = 0;
                 const transactions = activeAccountHolderTransaction.transactions;
                 if (transactions != null) {
                     for (let tran of transactions) {
                         obalanceSum = obalanceSum + tran.obalance;
                         balanceSum = balanceSum + tran.balance;
+                        pointPnlSum = pointPnlSum + tran.pointPnl;
+                        profitLossSum = profitLossSum + tran.profitLoss;
                     }
                 }
 
-                this.setState({ activeAccountHolderTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: accountHolder,lastSaved:response.data.lastSaved });
+                this.setState({ activeAccountHolderTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: accountHolder, lastSaved: response.data.lastSaved, pointPnlSum: pointPnlSum, profitLossSum: profitLossSum });
             }).catch(error => {
                 if (error === 401) {
                     alert("Session Expired !!\nPlease login.")
@@ -160,7 +166,7 @@ class HolderWiseEntry extends React.Component {
 
     render() {
         const { loggingIn } = this.props;
-        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeAccountHolderTransaction, obalanceSum, balanceSum, isLogout,lastSaved } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeAccountHolderTransaction, obalanceSum, balanceSum, isLogout, lastSaved, profitLossSum, pointPnlSum } = this.state;
         const { name, baseRate, remarks } = activeAccount || '';
         const items = []
         const elements = this.state.searchResult;
@@ -187,8 +193,8 @@ class HolderWiseEntry extends React.Component {
                     <td style={{ 'background-color': value.pointPnl >= 0 ? '#b6daad' : '#f1a9b4' }}>
                         {value.pointPnl.toLocaleString('en-IN', {
                             maximumFractionDigits: 2,
-                            style: 'currency',
-                            currency: 'INR'
+                            // style: 'currency',
+                            // currency: 'INR'
                         })}
                     </td>
                     <td style={{ 'background-color': value.profitLoss >= 0 ? '#b6daad' : '#f1a9b4' }}>
@@ -305,8 +311,20 @@ class HolderWiseEntry extends React.Component {
                                                         <th scope="col"></th>
                                                         <th scope="col"></th>
                                                         <th scope="col">{balanceSum}</th>
-                                                        <th scope="col"></th>
-                                                        <th scope="col"></th>
+                                                        <th scope="col">
+                                                            {pointPnlSum.toLocaleString('en-IN', {
+                                                                maximumFractionDigits: 2,
+                                                                // style: 'currency',
+                                                                // currency: 'INR'
+                                                            })}
+                                                        </th>
+                                                        <th scope="col">
+                                                            {profitLossSum.toLocaleString('en-IN', {
+                                                                maximumFractionDigits: 2,
+                                                                style: 'currency',
+                                                                currency: 'INR'
+                                                            })}
+                                                        </th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -316,7 +334,7 @@ class HolderWiseEntry extends React.Component {
                                                 <div className="help-block">Remarks are required</div>
                                             } */}
                                         </div >
-                                        <div style={{'display':lastSaved?'':'none'}}> Last Saved : {lastSaved}</div>
+                                        <div style={{ 'display': lastSaved ? '' : 'none' }}> Last Saved : {lastSaved}</div>
                                     </div>
                                 </div>
                             </div>

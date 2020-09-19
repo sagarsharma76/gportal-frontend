@@ -14,10 +14,8 @@ class NavigationBar extends React.Component {
         this.state = { isOpen: false }
     }
 
-    componentDidMount(props) {
-        if(this.props.isLogout === true){
-            this.logout();
-        }
+    componentDidMount() {
+        
     }
 
     handleOpen = () => {
@@ -41,6 +39,11 @@ class NavigationBar extends React.Component {
     }
 
     render() {
+        debugger;
+        console.log(this.props.isLogout)
+        if(this.props.isLogout === true){
+            this.logout();
+        }
         return (
             <div>
                 <Navbar className="navbar-custom navbar" expand="lg">

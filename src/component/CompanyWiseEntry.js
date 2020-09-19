@@ -24,6 +24,8 @@ class CompanyWiseEntry extends React.Component {
             date: date,
             obalanceSum: 0,
             balanceSum: 0,
+            pointPnlSum: 0,
+            profitLossSum: 0,
             successMessage: false,
             isLogout: false,
             lastSaved:''
@@ -101,15 +103,19 @@ class CompanyWiseEntry extends React.Component {
                 let activeCompanyTransaction = response.data;
                 let obalanceSum = 0;
                 let balanceSum = 0;
+                let pointPnlSum = 0;
+                let profitLossSum = 0;
                 const transactions = activeCompanyTransaction.transactions;
                 if (transactions != null) {
                     for (let tran of transactions) {
                         obalanceSum = obalanceSum + tran.obalance;
                         balanceSum = balanceSum + tran.balance;
+                        pointPnlSum = pointPnlSum + tran.pointPnl;
+                        profitLossSum = profitLossSum + tran.profitLoss;
                     }
                 }
 
-                this.setState({ activeCompanyTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: company, lastSaved:response.data.lastSaved});
+                this.setState({ activeCompanyTransaction: response.data, obalanceSum: obalanceSum, balanceSum: balanceSum, activeAccount: company, lastSaved:response.data.lastSaved,pointPnlSum: pointPnlSum, profitLossSum: profitLossSum });
             })
     }
 
@@ -158,7 +164,7 @@ class CompanyWiseEntry extends React.Component {
 
 
     render() {
-        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum, isLogout,lastSaved } = this.state;
+        const { searchTerm, activeAccount, isDisabled, isSubmitted, date, activeCompanyTransaction, obalanceSum, balanceSum, isLogout,lastSaved,profitLossSum, pointPnlSum  } = this.state;
         const { name, baseRate, remarks } = activeAccount || '';
         const items = []
         const elements = this.state.searchResult;
@@ -303,8 +309,20 @@ class CompanyWiseEntry extends React.Component {
                                                         <th scope="col"></th>
                                                         <th scope="col"></th>
                                                         <th scope="col">{balanceSum}</th>
-                                                        <th scope="col"></th>
-                                                        <th scope="col"></th>
+                                                        <th scope="col">
+                                                            {pointPnlSum.toLocaleString('en-IN', {
+                                                                maximumFractionDigits: 2,
+                                                                // style: 'currency',
+                                                                // currency: 'INR'
+                                                            })}
+                                                        </th>
+                                                        <th scope="col">
+                                                            {profitLossSum.toLocaleString('en-IN', {
+                                                                maximumFractionDigits: 2,
+                                                                style: 'currency',
+                                                                currency: 'INR'
+                                                            })}
+                                                        </th>
                                                     </tr>
                                                 </tfoot>
                                             </table>

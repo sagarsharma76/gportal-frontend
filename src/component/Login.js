@@ -44,12 +44,9 @@ class LoginPage extends React.Component {
                         //localStorage.setItem('token', token);
                         dispatch(actions.loginSuccess(token))
                         console.log(this.props.token)
-                        history.push("/")
-                        // setTimeout(() => {
-                        //     if(this.props.token!==null && this.props.token!=='' && this.props.token!==undefined){
-                        //         history.push("/")
-                        //     }
-                        // }, 300); 
+                        if(this.props.token!==null && this.props.token!=='' && this.props.token!==undefined){
+                                    history.push("/")
+                                }
                     } else {
                         alert("Login Failed !!")
                     }
